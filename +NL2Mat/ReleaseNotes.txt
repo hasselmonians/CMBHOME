@@ -1,0 +1,22 @@
+*********************************************
+*
+*	Matlab Import/Export MEX files Release Notes
+*
+*********************************************
+
+****************
+* v4.1.1
+****************
+General Changes:
+-Import MEX files now read files that contain records that have out of order timestamps.
+-Updated some errors in the help documentation.
+
+
+****************
+* v4.1.0
+****************
+Added Features:
+-64bit Matlab support
+
+General Changes:
+-Changed to new MEX file format (R2008a)
