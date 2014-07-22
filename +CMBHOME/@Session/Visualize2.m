@@ -1021,7 +1021,7 @@ uicontrol('Style','edit',... % one textbox
                         t = [t fliplr(t)];
                         patch(t,[m{i}+s{i} fliplr(m{i}-s{i})],[.8 .8 .8],'EdgeColor',[.8 .8 .8]);
                         t = [(i-1)*32+11:(i)*32+10] + (i-1)*5;
-                        plot(t,m{i},'r','LineWidth',3)
+                        plot(t,m{i},'r','LineWidth',1)
                     end
 
                     title('Waveform')
