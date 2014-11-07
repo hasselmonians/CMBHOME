@@ -26,3 +26,9 @@ Wn_theta = [Fpass(1)/(Fs/2) Fpass(2)/(Fs/2)]; % normalized by the nyquist freque
 [btheta,atheta] = butter(3,Wn_theta);
 
 signal_filtered = filtfilt(btheta,atheta,signal);
+
+if all(isnan(signal_filtered))                  % went too low, figure out a new way:
+    [z,p,k] = butter(3,Wn_theta);               % lowpass filter - 5 Hz cutoff
+    SOS = zp2sos(z,p,k);                        % second order sections matrix
+    signal_filtered = sosfilt(SOS,signal);  
+end
