@@ -33,7 +33,7 @@ function p = pass_index_parser(varargin)
 %   or a function handle that returns a nX2 matrix as described above. Set
 %   from 'auto' to 'arc_length' if method is 'place' or 'grid'.
 %   * filter_band: Default 'auto', can be any positive frequency range in 
-%   cycles/unit sampled along using the ‘filter_band’ parameter. 
+%   cycles/unit sampled along using the ï¿½filter_bandï¿½ parameter. 
 %   Additionally, filter_band can be a function handle which returns a 
 %   modified signal. Set from 'auto' to [0.0749 0.0029] if 'method' is
 %   'grid' and to the [3*D 1/6*D].^-1, where D is the field width 
@@ -60,11 +60,11 @@ p = inputParser;
 p.KeepUnmatched = true;
 
 % Get data
-p.addRequired('pos_ts',@(x)isnumeric(x)&sum(size(x)==1)>=1);
-p.addRequired('pos',@isnumeric);
-p.addRequired('spk_ts',@(x)isnumeric(x)&sum(size(x)==1)>=1);
-p.addOptional('lfp_ts',[],@(x)isempty(x)||(isnumeric(x)&&sum(size(x)==1)>=1));
-p.addOptional('lfp_sig',[],@(x)isempty(x)||(isnumeric(x)&&sum(size(x)==1)>=1));
+p.addParameter('pos_ts',@(x)isnumeric(x)&sum(size(x)==1)>=1);
+p.addParameter('pos',@isnumeric);
+p.addParameter('spk_ts',@(x)isnumeric(x)&sum(size(x)==1)>=1);
+p.addParameter('lfp_ts',[],@(x)isempty(x)||(isnumeric(x)&&sum(size(x)==1)>=1));
+p.addParameter('lfp_sig',[],@(x)isempty(x)||(isnumeric(x)&&sum(size(x)==1)>=1));
 p.parse(varargin{:});
 for i = fields(p.Results)'
     eval([i{1} ' = p.Results.' i{1} ';']);
@@ -74,7 +74,7 @@ end
 for i=1:size(pos,2)
    pos(:,i) = interp1(pos_ts(~isnan(pos(:,i))),pos(~isnan(pos(:,i)),i),pos_ts,'linear','extrap');
 end
-varargin{2} = pos;
+varargin{4} = pos;
 
 % Add parser terms
 p.addParamValue('method','grid',@(x)(ischar(x)&&...
@@ -111,8 +111,8 @@ if numel(unique(diff(lfp_ts)))>1||unique(diff(lfp_ts))^-1~=p.Results.lfp_subsamp
 end
 
 % Replace in VARARGIN
-varargin{4} = lfp_ts;
-varargin{5} = lfp_sig;
+varargin{8} = lfp_ts;
+varargin{10} = lfp_sig;
 p.parse(varargin{:});
 
 %% Update auto scalars
