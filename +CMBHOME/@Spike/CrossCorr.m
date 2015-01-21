@@ -133,8 +133,6 @@ for i = 0:max(dspk)
     
 end
 
-psth(psth<lag(1) | psth>lag(2))=NaN;
-
 if saveMem
   cor = sum(cor);
   zeroLag = find(lags==0);

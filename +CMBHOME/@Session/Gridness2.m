@@ -342,7 +342,7 @@ d2 = sqrt(sum(peak_centers.^2,2));
 
 d2 = sort(d2);
 
-if length(d2>1)
+if length(d2)>1
     
     d2(1) = [];
     

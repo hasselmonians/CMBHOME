@@ -1,6 +1,6 @@
 function plot_isi_dist(self, cel)
 
-    ts = self.spk_ts(cel);
+    ts = self.cel_ts;
     
     if iscell(ts)
         

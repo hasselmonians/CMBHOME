@@ -99,10 +99,10 @@ if omit_islands, occupancy = OmitIslands(occupancy); end
 no_occupancy = occupancy==0; % mark indeces where there was no occupancy so we can correct after smoothing
     
 if continuize_epochs
-    [spk_x, spk_y] = ContinuizeEpochs(self.spk_sx(cel), self.spk_sy(cel)); 
+    [spk_x, spk_y] = ContinuizeEpochs(self.cel_sx, self.cel_sy); 
 else
-    spk_x = self.spk_sx(cel);
-    spk_y = self.spk_sy(cel);
+    spk_x = self.cel_sx;
+    spk_y = self.cel_sy;
 end
 
 if ~iscell(spk_x)

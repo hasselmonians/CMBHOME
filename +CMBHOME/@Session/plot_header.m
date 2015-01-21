@@ -23,7 +23,7 @@ function plot_header(self, cel)
     text(0, .4, ['Event Start: ' str1], 'FontSize', 8);
     text(0, .25, ['Event Stop: ' str2], 'FontSize', 8);
 
-    N_spikes = length(self.spk_ts(cel(1), cel(2)));
+    N_spikes = length(CMBHOME.Utils.ContinuizeEpochs(self.cel_ts));
 
     F = N_spikes / diff(self.epoch);
 

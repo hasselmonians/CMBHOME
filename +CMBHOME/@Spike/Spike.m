@@ -141,6 +141,8 @@ classdef Spike
 
         % ehren newman march 2010
 
+        if iscell(x); x = CMBHOME.Utils.ContinuizeEpochs(x);end
+        
         % remove any nan's from x and y
               x(isnan(x)) = [];
               y(isnan(y)) = [];

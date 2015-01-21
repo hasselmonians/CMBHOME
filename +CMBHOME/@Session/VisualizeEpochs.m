@@ -215,10 +215,10 @@ function VisualizeEpochs(self)
     end
 
     if size(self.epoch, 1)>1
-        N_spikes = self.spk_ts(current_cell);
+        N_spikes = self.cel_ts;
         N_spikes = length(vertcat(N_spikes{:}));
     else
-        N_spikes = length(self.spk_ts(current_cell));
+        N_spikes = length(self.cel_ts);
     end
 
     F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));
@@ -512,10 +512,10 @@ function VisualizeEpochs(self)
             end
 
             if size(self.epoch, 1)>1
-                N_spikes = self.spk_ts(current_cell);
+                N_spikes = self.cel_ts;
                 N_spikes = length(vertcat(N_spikes{:}));
             else
-                N_spikes = length(self.spk_ts(current_cell));
+                N_spikes = length(self.cel_ts);
             end
 
             F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));
@@ -584,10 +584,10 @@ function VisualizeEpochs(self)
                     end
 
                     if size(self.epoch, 1)>1
-                        N_spikes = self.spk_ts(current_cell);
+                        N_spikes = self.cel_ts;
                         N_spikes = length(vertcat(N_spikes{:}));
                     else
-                        N_spikes = length(self.spk_ts(current_cell));
+                        N_spikes = length(cel_ts);
                     end
 
                     F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));

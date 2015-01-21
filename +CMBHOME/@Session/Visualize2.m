@@ -232,10 +232,10 @@ uicontrol('Style','edit',... % one textbox
     end
 
     if size(self.epoch, 1)>1
-        N_spikes = self.spk_ts(current_cell);
+        N_spikes = self.cel_ts;
         N_spikes = length(vertcat(N_spikes{:}));
     else
-        N_spikes = length(self.spk_ts(current_cell));
+        N_spikes = length(self.cel_ts);
     end
 
     F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));
@@ -651,10 +651,10 @@ uicontrol('Style','edit',... % one textbox
             end
 
             if size(self.epoch, 1)>1
-                N_spikes = self.spk_ts(current_cell);
+                N_spikes = self.cel_ts;
                 N_spikes = length(vertcat(N_spikes{:}));
             else
-                N_spikes = length(self.spk_ts(current_cell));
+                N_spikes = length(self.cel_ts);
             end
 
             F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));
@@ -719,10 +719,10 @@ uicontrol('Style','edit',... % one textbox
                 end
 
                 if size(self.epoch, 1)>1
-                    N_spikes = self.spk_ts(current_cell);
+                    N_spikes = self.cel_ts;
                     N_spikes = length(vertcat(N_spikes{:}));
                 else
-                    N_spikes = length(self.spk_ts(current_cell));
+                    N_spikes = length(self.cel_ts);
                 end
 
                 F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));
@@ -1021,7 +1021,7 @@ uicontrol('Style','edit',... % one textbox
                         t = [t fliplr(t)];
                         patch(t,[m{i}+s{i} fliplr(m{i}-s{i})],[.8 .8 .8],'EdgeColor',[.8 .8 .8]);
                         t = [(i-1)*32+11:(i)*32+10] + (i-1)*5;
-                        plot(t,m{i},'r','LineWidth',1)
+                        plot(t,m{i},'r','LineWidth',3)
                     end
 
                     title('Waveform')

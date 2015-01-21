@@ -296,7 +296,7 @@ else
             top = i+maxl;
             if (top>length(inds)), top=length(inds);end;
             inds1 = inds(i:top);
-            flns = [flns;sum(abs(repmat(self.spk.ts',[length(self.ts(inds1)) 1])-repmat(self.ts(inds1),[1 length(self.spk.ts')]))<=binside/2,2)/binside];
+            flns = [flns;sum(abs(repmat(self.cel_ts',[length(self.ts(inds1)) 1])-repmat(self.ts(inds1),[1 length(self.cel_ts')]))<=binside/2,2)/binside];
             i=top+1;
         end
         flns = CMBHOME.Utils.smthMat(flns,[0 5*smth/binside]);

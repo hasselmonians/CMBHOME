@@ -13,7 +13,7 @@ function self = FixPos(self, max_allowed_flips)
 import CMBHOME.Utils.*
 
 if self.raw_pos~=1
-    disp('It appears the tracking data has already been affected. Reset root.raw_pos=1 to override.');
+    %disp('It appears the tracking data has already been affected. Reset root.raw_pos=1 to override.');
     return;
 end
     

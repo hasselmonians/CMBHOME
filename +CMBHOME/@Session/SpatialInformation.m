@@ -65,7 +65,7 @@ else
   occupancy = ratemap{2};
 end
 
-n_spikes = self.spk_ts(cel);
+n_spikes = self.cel_ts;
 
 if iscell(n_spikes)
     n_spikes = cellfun(@length, n_spikes);

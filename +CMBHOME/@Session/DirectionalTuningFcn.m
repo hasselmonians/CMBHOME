@@ -43,15 +43,15 @@ function [tuning_curve, theta, ang_hd, mr] = DirectionalTuningFcn(self, cel, var
         
         self = MergeEpochs(self);
         
-        spk_headdir = ContinuizeEpochs(self.spk_headdir(cel));
+        spk_headdir = ContinuizeEpochs(self.cel_headdir);
 
     elseif size(cel,1)==1 && size(self.epoch,1)==1 % if one cell, one epoch
         
-        spk_headdir = self.spk_headdir(cel);      
+        spk_headdir = self.cel_headdir;      
         
     elseif size(self.epoch,1)>1 || size(cel,1)>1 % if multiple epochs and not continuized, or multiple cells
         
-        spk_headdir = self.spk_headdir(cel); % cell array of epochs x cells
+        spk_headdir = self.cel_headdir; % cell array of epochs x cells
 
         spk_headdir = CatCA(spk_headdir); % function in CMBHOME.Utils converts cell array to matrix
 
@@ -61,7 +61,7 @@ function [tuning_curve, theta, ang_hd, mr] = DirectionalTuningFcn(self, cel, var
     
     for i = 1:size(spk_headdir, 3) % if multiple cells and epochs. this partially vectorizes the functions since hist accepts matrices
         
-        num_spikes(:,:,i) = hist(spk_headdir(:,:,i), theta); 
+        num_spikes(:,:,i) = hist(CMBHOME.Utils.ContinuizeEpochs(spk_headdir(:,:,i)), theta); 
         
     end
 

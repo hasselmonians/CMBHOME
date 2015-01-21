@@ -1,5 +1,5 @@
 function plot_head_dir(self)
 
-    line(self.ts, self.headdir, 'Color', 'k');
+    line(CMBHOME.Utils.ContinuizeEpochs(self.ts), CMBHOME.Utils.ContinuizeEpochs(self.headdir), 'Color', 'k');
 end
 

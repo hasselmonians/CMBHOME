@@ -30,13 +30,11 @@ if ~isa(self.b_lfp, 'CMBHOME.LFP'), self.b_lfp = CMBHOME.LFP; end
 
 
 p = inputParser;
-p.addParamValue('dataPath', dropboxPath, @(x) ischar(x));                  % Make all final paths relative to this folder
 p.addParamValue('ifScale',  1,           @(x) (x==1) || (x==0));           % scale eeg data?
 p.addParamValue('ifHD', 1,               @(x) (x==1) || (x==0));           % use egf instead of eeg if available?
 p.addParamValue('downsample', 0,         @(x) isnumeric(x));               % [0] downsample to default of 250 Hz if set to 1, or to specific sampling rate if set to anything other than 1
 
 p.parse(varargin{:});
-dataPath = p.Results.dataPath;
 ifScale = p.Results.ifScale;
 ifHD = p.Results.ifHD;
 downsample = p.Results.downsample;

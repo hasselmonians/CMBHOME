@@ -44,7 +44,7 @@ n_thresh = p.Results.n_thresh;
 %% Calculation
 [tuningCurve,~,occupancy] = self.Tuning(variableName,root);
 
-n_spikes = root.spk_ts(root.cel);
+n_spikes = root.cel_ts;
 
 if iscell(n_spikes)
      n_spikes = cellfun(@length, n_spikes);

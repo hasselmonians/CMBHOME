@@ -48,9 +48,9 @@ if ind>length(self.b_lfp)
     error('ind exceeds length of root.b_lfp');
 end
 
-if isfield(self.b_lfp(ind), field)
+try
     signal = self.b_lfp(ind).(field);
-else
+catch
     error('Field does not exist in root.b_lfp');
 end
 
@@ -69,26 +69,15 @@ end
 
 filtered_signal = []; % initialize returns
 
-if isempty('Fpass', 'var')
-    help CMBHOME.Session.BandpassLFP
+if isempty(Fpass)
+    %help CMBHOME.Session.BandpassLFP
     error('You must either define Fpass or Passband.');
 end
 
 if ind>length(self.b_lfp) 
-    help CMBHOME.Session.BandpassLFP
+    %help CMBHOME.Session.BandpassLFP
     disp('ind exceeds number of lfp signals');
     return
-    
-elseif ~isfield(self.b_lfp(ind), field) % if signal doesnt exist
-    help CMBHOME.Session.BandpassLFP
-    disp([field 'is not a field in b_lfp.']);
-    return
-    
-elseif isempty(self.b_lfp(ind).(field)) % if signal is empty
-    help CMBHOME.Session.BandpassLFP
-    disp('signal does not exist for this index');
-    return
-    
-end   
+end
 
-filtered_signal = LFP.BandpassFilter(self.b_lfp(ind).signal, self.fs, Fpass);
+filtered_signal = LFP.BandpassFilter(self.b_lfp(ind).signal, self.b_lfp(ind).fs, Fpass);

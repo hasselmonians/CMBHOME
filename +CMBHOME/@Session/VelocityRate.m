@@ -16,7 +16,7 @@ function [f_cell, vel_dim] = VelocityRate(self, cel, vel_dim)
 % root.epoch needs to be 1x2 vector
 %
 % andrew 17 may 2010
-
+self.cel = cel;
 if ~exist('vel_dim', 'var')
     vel_dim = 0:self.spatial_scale^-1:max(self.vel);
 end
@@ -27,7 +27,7 @@ import CMBHOME.Utils.*
 
 self = MergeEpochs(self);
 
-[vel, spk_vel] = ContinuizeEpochs(self.vel, self.spk_vel(cel)); % get running speed at spikes
+[vel, spk_vel] = ContinuizeEpochs(self.vel, self.cel_vel); % get running speed at spikes
 
 tao_v = histc(vel, vel_dim) .* self.fs_video^-1; % time spent in each bin of running speed
 
