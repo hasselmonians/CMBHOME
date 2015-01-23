@@ -139,6 +139,7 @@ if saveMem
   cor = [cor(1:zeroLag-3),sum(cor(zeroLag-2:zeroLag-1),2), sum(cor(zeroLag+2:zeroLag+1),2), cor(zeroLag+3:end)];
 else
   if ac, psth(psth==0) = []; end % remove zeros in autocorrelation
+  psth(psth<lags(1)-binsize/2) = [];
   cor = hist(psth, lags);
 end
 
