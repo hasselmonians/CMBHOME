@@ -696,6 +696,12 @@ classdef Session
         
         function vel = get.vel(self)
         % returns pixels/sec
+            if isempty(self.b_vel)
+                %self = AppendKalmanVel(self);
+                self.b_vel = sqrt(([0;diff(self.b_x)]).^2+([0;diff(self.b_y)]).^2) * self.fs_video;
+                warning('No vel set, setting simple derivative. Recommended: root=root.AppendKalmanVel   (slow)');
+            end
+            
             vel = [];
 
             if iscell(self.p_ind)
