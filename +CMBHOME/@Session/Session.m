@@ -332,6 +332,12 @@ classdef Session
             epoch(epoch==inf) = self.b_ts(end);
             epoch(epoch==-inf) = self.b_ts(1);
 
+            if isempty(self.b_vel)
+                %self = AppendKalmanVel(self);
+                self.b_vel = sqrt(([0;diff(self.b_x)]).^2+([0;diff(self.b_y)]).^2) * self.fs_video;
+                warning('No vel set, setting simple derivative. Recommended: root=root.AppendKalmanVel   (slow)');
+            end
+            
             if all(size(epoch)==size(self.p_epoch))
                 
                 if all(epoch==self.p_epoch) % you are reassigning the same thing!! dont run all the scripts below
@@ -353,8 +359,6 @@ classdef Session
             if ~isempty(self.myvar2)
                 self.myvar2 = self.myvar2.setEpoch(self.ind,self.b_ts);
             end
-            
-            self
             
         end  
         
@@ -692,40 +696,12 @@ classdef Session
         
         function vel = get.vel(self)
         % returns pixels/sec
-        
-            if ~isempty(self.b_vel) % if there is a user defined velocity
-                
-                vel = [];
+            vel = [];
 
-                if iscell(self.p_ind)
-                    vel = cellfun(@(c) self.b_vel(c), self.p_ind, 'UniformOutput', false);
-                elseif ~isempty(self.b_vel)
-                    vel=self.b_vel(self.p_ind);
-                end
-                
-            else
-            
-                if ~isempty(self.x) && length(self.x)==length(self.y)
-
-                    if iscell(self.x)
-
-                        vel = cell(length(self.x),1);
-
-                        for i = 1:length(self.x)
-                            vel{i} = cat(1, 0, sqrt(diff(self.x{i}).^2+diff(self.y{i}).^2))*self.fs_video;
-                        end
-
-                    else
-                        vel = cat(1, 0, sqrt(diff(self.x).^2+diff(self.y).^2))*self.fs_video;
-                    end
-
-                else
-
-                    warning('CMBH:error', 'Incoherent x and y tracking, or no tracking.');
-
-                    vel = [];
-
-                end
+            if iscell(self.p_ind)
+                vel = cellfun(@(c) self.b_vel(c), self.p_ind, 'UniformOutput', false);
+            elseif ~isempty(self.b_vel)
+                vel=self.b_vel(self.p_ind);
             end
         end
                 
@@ -1406,7 +1382,7 @@ classdef Session
                 
                 self.b_vel = b_vel;
                 
-                warning('CMBH:notify', '%s', 'Added Kalman Velocity to Session Object.');
+                %warning('CMBH:notify', '%s', 'Added Kalman Velocity to Session Object.');
             
             end
         end
