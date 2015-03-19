@@ -1091,16 +1091,16 @@ classdef Session
             
             %cel_ts = cell(size(self.epoch,1),size(self.cel,1));
             
-            for i = 1:size(self.cel,1)
-                cel = self.cel(i,:);
+            %for i = 1:size(self.cel,1)
+            %    cel = self.cel(i,:);
             %    spks_ts = self.spike(cel(1), cel(2)).ts;
                 
             %    for k = 1:size(self.epoch,1)
             %        curInds = spks_ts >= self.epoch(k,1) & spks_ts <= self.epoch(k,2);
             %        cel_ts{k,i} = spks_ts(curInds);
             %    end
-                cel = self.cel(i,:);
-                cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
+                %cel = self.cel(i,:);
+                %cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
             end  
         end
 

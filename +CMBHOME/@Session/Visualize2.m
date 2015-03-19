@@ -632,7 +632,7 @@ uicontrol('Style','edit',... % one textbox
     function updateScreen(self, current_cell, plot_vec, f, control_f)
             
             import CMBHOME.*
-            
+            self.cel = current_cell;
             figure(control_f);
             
             rate_map = []; % initialize reused variables
@@ -651,10 +651,10 @@ uicontrol('Style','edit',... % one textbox
             end
 
             if size(self.epoch, 1)>1
-                N_spikes = self.cel_ts;
+                N_spikes = CMBHOME.Utils.ContinuizeEpochs(self.cel_ts);
                 N_spikes = length(vertcat(N_spikes{:}));
             else
-                N_spikes = length(self.cel_ts);
+                N_spikes = length(self.cel_ts {1});
             end
 
             F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));
@@ -719,10 +719,10 @@ uicontrol('Style','edit',... % one textbox
                 end
 
                 if size(self.epoch, 1)>1
-                    N_spikes = self.cel_ts;
+                    N_spikes = CMBHOME.Utils.ContinuizeEpochs(self.cel_ts);
                     N_spikes = length(vertcat(N_spikes{:}));
                 else
-                    N_spikes = length(self.cel_ts);
+                    N_spikes = length(self.cel_ts{1});
                 end
 
                 F = N_spikes / sum(self.epoch(:,2)-self.epoch(:,1));

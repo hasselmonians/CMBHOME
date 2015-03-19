@@ -11,6 +11,8 @@ function self = FixPos(self, max_allowed_flips)
 % update andrew june 15 2011
 
 import CMBHOME.Utils.*
+self.b_vel=[];
+self = self.AppendKalmanVel;
 
 if self.raw_pos~=1
     %disp('It appears the tracking data has already been affected. Reset root.raw_pos=1 to override.');
