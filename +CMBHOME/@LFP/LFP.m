@@ -141,9 +141,11 @@ end
                     return;
                 end
                 
-                self.b_theta = self.ThetaFilter(self.signal, self.fs);                
-                self = self.AppendThetaPhase;
-                self = self.AppendThetaAmplitude;
+                if ~isempty(self.signal)
+                    self.b_theta = self.ThetaFilter(self.signal, self.fs);                
+                    self = self.AppendThetaPhase;
+                    self = self.AppendThetaAmplitude;
+                end
             end
         end
         
