@@ -22,7 +22,7 @@ function self = FixDir(self, max_allowed_flips)
 % andrew 2 nov 2009
 
 if self.raw_headdir~=1
-    disp('It appears the head direction tracking data has already been affected. Reset root.raw_headdir=1 to override.');
+    %disp('It appears the head direction tracking data has already been affected. Reset root.raw_headdir=1 to override.');
     return;
 end
 

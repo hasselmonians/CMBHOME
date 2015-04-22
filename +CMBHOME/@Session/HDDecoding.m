@@ -93,7 +93,7 @@ for i = 1:size(de_epochs,1) % run through all decoding epochs
            
     self.epoch = epoch;
     
-    N = cellfun(@numel, self.spk_ts(cels)); % matrix epochs x cells of spike counts
+    N = cellfun(@numel, self.cel_ts); % matrix epochs x cells of spike counts
     
     expon = repmat( N, [1, 1, length(bins)]); % number of spikes each cell fired, epochs x cells x spike count repeated as per # bins
 
@@ -208,7 +208,7 @@ function I = Incoherency(root, hd, bins, mFr, de_epochs, cells)
 
 root.epoch = de_epochs;
 
-spikes = cellfun(@length, root.spk_ts(cells)); % matrix of spike counts epochs x cells
+spikes = cellfun(@length, root.cel_ts); % matrix of spike counts epochs x cells
 
 f = spikes ./ repmat(de_epochs(:,2) - de_epochs(:,1), 1, size(spikes,2)); % firing frequency epochs x cells
 

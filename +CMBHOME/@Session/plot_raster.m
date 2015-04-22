@@ -58,7 +58,7 @@ end
 
 % build cell array of firing
 
-cell_spk = self.spk_ts(cel); % cell array of spike times
+cell_spk = self.cel_ts; % cell array of spike times
 
 if iscell(cell_spk)
     for i = 1:size(cell_spk,1) % take care of multiple epochs

@@ -121,13 +121,13 @@ for epoch_ind = 1:size(orig_epoch, 1)
     
     %[cor, lag] = self.AutoCorr(cel, 'speed_thresh', speed_thresh, 'theta_skip', 0, 't_bin', t_bin, 'supress_plot', 1, 'max_lag', max_lag_t,'unbiased',1);
     
-    [cor, lag, acN(epoch_ind)] = downsample4AC(self.spk.ts, t_bin, max_lag_t, downsample);
+    [cor, lag, acN(epoch_ind)] = downsample4AC(self.cel_ts, t_bin, max_lag_t, downsample);
     
   else
     
     if isnan(downsample), [f_peak, thetaMod, rVal, fullResults] = deal(nan); return; end
     
-    [cor, lag, acN(epoch_ind)] = downsample4AC(self.spk.ts, t_bin, max_lag_t, downsample);
+    [cor, lag, acN(epoch_ind)] = downsample4AC(self.cel_ts, t_bin, max_lag_t, downsample);
     
   end
   

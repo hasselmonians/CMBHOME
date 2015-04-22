@@ -30,10 +30,10 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
     no_occupancy = occupancy~=0; % mark indeces where there was no occupancy so we can correct after smoothing
     
     if mergeepochs
-        [spk_x, spk_y] = ContinuizeEpochs(self.spk_x(cel), self.spk_y(cel)); 
+        [spk_x, spk_y] = ContinuizeEpochs(self.cel_x, self.cel_y); 
     else
-        spk_x = self.spk_x(cel);
-        spk_y = self.spk_y(cel);
+        spk_x = self.cel_x;
+        spk_y = self.cel_y;
     end
 
     if ~iscell(spk_x)
@@ -79,11 +79,12 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
     
     if ~suppress_plot && mergeepochs==1
         figure
+        rate_map(no_occupancy==0) = NaN;
+        [cbar, clims] = SmartColorbar(clims, 'jet(255)');
         t=imagesc(xdim, ydim, rate_map, clims);
-        colormap jet(255);
+        colormap(cbar);
         axis equal
-
-        set(gca, 'Box', 'on')
+        axis off
 
         xlim(xs.*pad+xs);
         ylim(ys.*pad+ys);
@@ -94,13 +95,13 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
 
         set(gca,'YDir','normal'); % so plotting functions dont reverse axis
 
-        set(t, 'AlphaDataMapping', 'none');   %   until this works properly
+        %set(t, 'AlphaDataMapping', 'none');   %   until this works properly
                                                   %without screwing up other axes in the subplot, screw it!
-        set(gca, 'DrawMode', 'fast');
-        set(t,'AlphaData', no_occupancy);
+        %set(gca, 'DrawMode', 'fast');
+        %set(t,'AlphaData', no_occupancy);
 
-        set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
-        set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
+        %set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
+        %set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
         
     elseif ~suppress_plot && mergeepochs == 0
         for i = 1:size(occupancy,3)
@@ -120,13 +121,13 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
 
             set(gca,'YDir','normal'); % so plotting functions dont reverse axis
 
-            set(t, 'AlphaDataMapping', 'none');   %   until this works properly
+            %set(t, 'AlphaDataMapping', 'none');   %   until this works properly
                                                       %without screwing up other axes in the subplot, screw it!
-            set(gca, 'DrawMode', 'fast');
+            %set(gca, 'DrawMode', 'fast');
             set(t,'AlphaData', no_occupancy(:,:,i)');
             
-            %set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
-            %set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
+            set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
+            set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
         end
     end
 

@@ -332,6 +332,12 @@ classdef Session
             epoch(epoch==inf) = self.b_ts(end);
             epoch(epoch==-inf) = self.b_ts(1);
 
+            if isempty(self.b_vel)
+                %self = AppendKalmanVel(self);
+                self.b_vel = sqrt(([0;diff(self.b_x)]).^2+([0;diff(self.b_y)]).^2) * self.fs_video;
+                warning('No vel set, setting simple derivative. Recommended: root=root.AppendKalmanVel   (slow)');
+            end
+            
             if all(size(epoch)==size(self.p_epoch))
                 
                 if all(epoch==self.p_epoch) % you are reassigning the same thing!! dont run all the scripts below
@@ -353,6 +359,7 @@ classdef Session
             if ~isempty(self.myvar2)
                 self.myvar2 = self.myvar2.setEpoch(self.ind,self.b_ts);
             end
+            
         end  
         
         function epoch = get.epoch(self)
@@ -689,40 +696,18 @@ classdef Session
         
         function vel = get.vel(self)
         % returns pixels/sec
-        
-            if ~isempty(self.b_vel) % if there is a user defined velocity
-                
-                vel = [];
-
-                if iscell(self.p_ind)
-                    vel = cellfun(@(c) self.b_vel(c), self.p_ind, 'UniformOutput', false);
-                elseif ~isempty(self.b_vel)
-                    vel=self.b_vel(self.p_ind);
-                end
-                
-            else
+            if isempty(self.b_vel)
+                self = AppendKalmanVel(self);
+%                self.b_vel = sqrt(([0;diff(self.b_x)]).^2+([0;diff(self.b_y)]).^2) * self.fs_video;
+%                warning('No vel set, setting simple derivative. Recommended: root=root.AppendKalmanVel   (slow)');
+            end
             
-                if ~isempty(self.x) && length(self.x)==length(self.y)
+            vel = [];
 
-                    if iscell(self.x)
-
-                        vel = cell(length(self.x),1);
-
-                        for i = 1:length(self.x)
-                            vel{i} = cat(1, 0, sqrt(diff(self.x{i}).^2+diff(self.y{i}).^2))*self.fs_video;
-                        end
-
-                    else
-                        vel = cat(1, 0, sqrt(diff(self.x).^2+diff(self.y).^2))*self.fs_video;
-                    end
-
-                else
-
-                    warning('CMBH:error', 'Incoherent x and y tracking, or no tracking.');
-
-                    vel = [];
-
-                end
+            if iscell(self.p_ind)
+                vel = cellfun(@(c) self.b_vel(c), self.p_ind, 'UniformOutput', false);
+            elseif ~isempty(self.b_vel)
+                vel=self.b_vel(self.p_ind);
             end
         end
                 
@@ -982,141 +967,6 @@ classdef Session
             
         end
         
-        function spk = get.spk(self)
-        % builds the dependent property root.spk, which is a struct with fields for 
-        % all relevant data that occurred at spike times for root.cel
-        
-%             disp('sadly, the root.spk. syntax is terribly slow. check out root.cel_x etc. seriously. rewrite this part of your code (sorry).');
-            
-            if isempty(self.cel), spk = []; return; end
-            
-            if ~isempty(self.b_vel), vel = self.b_vel; 
-            else vel = cat(1, 0, sqrt(diff(self.b_x).^2+diff(self.b_y).^2))/self.fs_video^-1;
-            end
-                          
-            if isempty(self.b_myvar), self.b_myvar = nan(length(self.b_ts),1); end
-
-            ind_lfp = self.active_lfp;
-        
-            cel = self.cel;
-
-            if size(self.epoch,1)>1 || size(cel,1)>1
-                spk.x = cell(size(self.epoch,1) , size(cel,1));
-                spk.y = cell(size(self.epoch,1) , size(cel,1));
-                spk.sx = cell(size(self.epoch,1) , size(cel,1));
-                spk.sy = cell(size(self.epoch,1) , size(cel,1));
-                spk.sheaddir = cell(size(self.epoch,1) , size(cel,1));
-                spk.myvar = cell(size(self.epoch,1) , size(cel,1));
-                spk.ts = cell(size(self.epoch,1) , size(cel,1));
-                spk.vel = cell(size(self.epoch,1) , size(cel,1));
-                spk.svel = cell(size(self.epoch,1) , size(cel,1));
-                spk.i = cell(size(self.epoch,1) , size(cel,1));
-                spk.headdir = cell(size(self.epoch,1) , size(cel,1));
-                spk.theta = cell(size(self.epoch,1) , size(cel,1));
-            else
-                spk.x = [];
-                spk.y = [];
-                spk.sx = [];
-                spk.sy = [];
-                spk.sheaddir = [];
-                spk.myvar = [];
-                spk.ts = [];
-                spk.vel = [];
-                spk.svel = [];
-                spk.i = [];
-                spk.headdir = [];
-                spk.theta = [];
-            end
-            
-            for j = 1:size(cel,1)
-            
-                [i, i2] = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    spk.x(:,j) = cellfun(@(c) self.b_x(c), i, 'UniformOutput', false);
-                    spk.y(:,j) = cellfun(@(c) self.b_y(c), i, 'UniformOutput', false);
-
-                    temp = self.spos(spk.x(:,j),spk.y(:,j));
-                    
-                    spk.sx(1:length(temp),j) = cellfun(@(x)x(:,1),temp,'UniformOutput',false); % eln 131002
-                    spk.sy(1:length(temp),j) = cellfun(@(x)x(:,2),temp,'UniformOutput',false); % eln 131002
-
-                    
-                    spk.vel(:,j) = cellfun(@(c) vel(c), i, 'UniformOutput', false);
-                    
-                    spk.svel(:,j) = cellfun(@(x) x*self.spatial_scale,spk.vel(:,j),'UniformOutput',false); %eln 131002
-
-                    spk.myvar(:,j) = cellfun(@(c) self.b_myvar(c), i, 'UniformOutput', false);
-                    spk.headdir(:,j) = cellfun(@(c) self.b_headdir(c), i, 'UniformOutput', false);
-                    spk.sheaddir(:,j) = cellfun(@(x)mod(x+self.rotate+180,360)-180,spk.headdir(:,j),'UniformOutput',false);
-                    spk.i(:,j) = i;
-                    spk.ts(:,j) = cellfun(@(c) self.spike(cel(j,1), cel(j,2)).ts(c), i2, 'UniformOutput', false);
-                    
-                    if ind_lfp
-                        i2 = cellfun(@(c) self.spike(cel(j,1), cel(j,2)).i_lfp{ind_lfp}(c), i2, 'Unif', 0);
-                        spk.theta(:,j) = cellfun(@(c) self.b_lfp(ind_lfp).theta_phase(c), i2, 'UniformOutput', false);
-                    end
-                        
-                elseif size(cel,1)>1
-                    spk.x{1,j} = self.b_x(i);
-                    spk.y{1,j} = self.b_y(i);
-                    
-                    temp = self.spos(spk.x{1,j},spk.y{1,j});
-                    
-                    spk.sx{1,j} = temp(:,1);
-                    spk.sy{1,j} = temp(:,2);
-                    
-                    spk.vel{1,j} = vel(i);
-                    spk.svel{1,j} = vel(i)*self.spatial_scale;
-
-                    spk.myvar{1,j} = self.b_myvar(i);
-                    
-                    spk.headdir{1,j} = self.b_headdir(i);
-                    spk.sheaddir{1,j} = mod(spk.headdir{1,j}+self.rotate+180,360)-180;
-                    
-                    spk.i{1,j} = i;
-                    spk.ts{1,j} = self.spike(cel(j,1), cel(j,2)).ts(i2);
-                    
-                    if ind_lfp
-                        if iscell(i2)
-                            i2 = cellfun(@(c) self.spike(cel(j,1), cel(j,2)).i_lfp{ind_lfp}(c), i2, 'UniformOutput', false);
-                            spk.theta{1,j} = self.b_lfp(ind_lfp).theta_phase(i2);
-                        else
-                            i2 = self.spike(cel(j,1),cel(j,2)).i_lfp{ind_lfp}(i2);
-                            spk.theta{1,j} = self.b_lfp(ind_lfp).theta_phase(i2);
-                        end
-                    end
-                    
-                else 
-                    spk.x = self.b_x(i);
-                    spk.y = self.b_y(i);
-                    spk.vel = vel(i);
-                    temp = self.spos(spk.x,spk.y);
-                    
-                    spk.sx = temp(:,1);
-                    spk.sy = temp(:,2);
-                    
-                    spk.vel = vel(i);
-                    spk.svel = spk.vel*self.spatial_scale;                    
-                    
-                    spk.myvar = self.b_myvar(i);
-                    spk.headdir = self.b_headdir(i);
-                    
-                    spk.sheaddir = mod(spk.headdir+self.rotate+180,360)-180;
-                    
-                    spk.i = i;
-                    spk.ts = self.spike(cel(j,1), cel(j,2)).ts(i2);
-                    
-                    if ind_lfp
-                        i2 = self.spike(cel(j,1), cel(j,2)).i_lfp{ind_lfp}(i2);
-                        spk.theta = self.b_lfp(ind_lfp).theta_phase(i2);
-                    end
-                end
-
-            end
-                    
-        end
-        
         function cel_x = get.cel_x(self)
             
             if isempty(self.p_cel_ind)
@@ -1219,7 +1069,7 @@ classdef Session
             
            cel_svel = self.cel_vel;
            
-           if iscell(cel_svel) %eln 131002
+           if iscell(cel_svel)
               cel_svel = cellfun(@(x) x*self.spatial_scale,cel_svel,'UniformOutput',false); 
            else
               cel_svel = cel_svel*self.spatial_scale;
@@ -1227,13 +1077,28 @@ classdef Session
         end
         
         function cel_ts = get.cel_ts(self)
-            if isempty(self.p_cel_ind)
-                disp('Set root.cel.'); 
-                cel_ts = cell(size(self.epoch,1), 1);
+            %if isempty(self.p_cel_ind)
+            %    disp('Set root.cel.'); 
+            %    cel_ts = cell(size(self.epoch,1), 1);
+            %    return
+            %end
+            
+            if isempty(self.cel)
+                disp('set root.cel.')
+                cel_ts = cell(size(self.epoch,1),1);
                 return
             end
             
+            %cel_ts = cell(size(self.epoch,1),size(self.cel,1));
+            
             for i = 1:size(self.cel,1)
+                cel = self.cel(i,:);
+            %    spks_ts = self.spike(cel(1), cel(2)).ts;
+                
+            %    for k = 1:size(self.epoch,1)
+            %        curInds = spks_ts >= self.epoch(k,1) & spks_ts <= self.epoch(k,2);
+            %        cel_ts{k,i} = spks_ts(curInds);
+            %    end
                 cel = self.cel(i,:);
                 cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
             end  
@@ -1437,26 +1302,16 @@ classdef Session
         end
         
         function self = set.path_lfp(self, path_lfp)
+            
             if isempty(path_lfp)
                 self.path_lfp = [];
                 return;
             end
             
             if ~iscell(path_lfp), path_lfp = {path_lfp}; end
-            
-%             if iscell(path_lfp)
-%                 ext = cellfun(@(c) c(end-3:end), path_lfp, 'UniformOutput', false);
-%             else
-%                 ext = path_lfp(end-3:end);
-%             end
-            
-            %if sum([ismember(ext,'.mat'), ismember(ext, '.plx'), ismember(ext, '.ncs')]) == length(path_lfp)
-                self.path_lfp = path_lfp;
-            %else
-            %    error('Error seeting path_lfp: lfp files must be .plx, .ncs, or .mat files. We can update this if need be.');
-            %end
-              
+            self.path_lfp = path_lfp;
         end
+        
        
         function self = set.b_lfp(self, b_lfp)
            
@@ -1512,587 +1367,7 @@ classdef Session
                 end
             end
         end
-        
-        function [spk_xcorr, lags, epoch, std_error] = spk_xcorr(self, cells, max_lag, t_bin, average_epochs, norm)
-        % [cor, lag, epoch, std_error] = root.spk_xcorr(cel, max_lag,t_bin, average_epochs);
-        %
-        % Returns the unbiased crosscorrelation, or autocorrelation for cell(s) in
-        % cel
-        %
-        % ARGUMENTS
-        %   cells               a Nx2 (N=1 or 2) array of cells for which to
-        %                       calculate xcorr. if N=1, than autocorrelation is returned
-        %   max_lag             maximum lag for which xcorr is calculated. epochs that are not this long are removed
-        %   t_bin               binsize in seconds
-        %   average_epochs      1 or 0 (default 0). If 1, cor is an array
-        %                       calculated by the average of correlations for each epoch
-        %                       weighted by epoch duration. If 0, cor is a
-        %                       cell array of correlation vectors for each
-        %                       epoch in the return variable epoch, which
-        %                       omits root.epoch for those shorter than
-        %                       max_lag, and marges any overlapping epochs
-        %                       in root.epoch so that we don't double count
-        %
-        % RETURNS
-        %   cor                 either a vector (if one epoch, or average_epochs==1, or a column array where each column is 
-        %                       the xcorr signal for epochs with spikes and
-        %                       as long as max_lag
-        %   lag                 same as above, but lags in seconds
-        %   epoch               returns epochs used in analysis (in case
-        %                       any of root.epoch were < max_lag, or had no
-        %                       spikes
-        %   std_error           if average_epochs=1, then the average error
-        %                       for each lag timepoint is returned for the averaged cor vector
-        %
-        % andrew 3 april 2010
-        
-            import CMBHOME.* % has the spk_xcorr function
-            import CMBHOME.Utils.*
-            
-            std_error = [];
-            
-            if nargin<2
-                error('spk_xcorr: Not enough arguments');
-            end
-            
-            if nargin<4
-                t_bin=.001;
-            end
-            
-            if nargin<3
-                max_lag = 5; %seconds
-            end
-            
-            if size(cells,2)~=2
-                error('spk_xcorr: cells must be like [tetrode ind, cell ind]');
-            end
-            
-            if size(cells,1)==1
-                cells(2,:) = cells(1,:);
-            end
-            
-            if ~exist('norm', 'var'), norm = 'count'; end
-
-            if ~exist('average_epochs', 'var'), average_epochs = 0; end
-            
-            if ~exist('speed_dur', 'var'), speed_dur = 1; end %#ok<NASGU>
-            
-            if average_epochs, self = MergeEpochs(self); end % if we are averaging epochs, make sure that we aren't double counting
-            
-            epoch = self.epoch;
-            
-            %tooshort = find( epoch(:,2)-epoch(:,1) < max_lag ); % old method, used find
-            tooshort = ( epoch(:,2)-epoch(:,1) < max_lag ); % remove any epochs which are shorter than max_lag
-            self.epoch(tooshort, :) = []; epoch = self.epoch;
-
-            if average_epochs, self = MergeEpochs(self); end % if we are averaging epochs, make sure that we aren't double counting
-            
-            if isempty(self.epoch)
-                
-                spk_xcorr = []; lags = []; epoch = []; std_error = [];
-                
-                warning('CMBH:error', 'No epochs meet this running speed requirement');
-                
-                return
-                
-            end
-            
-            x = self.spk_ts(cells(1,:));
-            y = self.spk_ts(cells(2,:));
-                    
-            if iscell(x)
-                    
-                empty_inds = cellfun(@isempty, x); % find empty epochs and remove them
-
-                empty_inds = empty_inds+cellfun(@isempty, y);
-
-                empty_inds = logical(empty_inds);
-
-                x(empty_inds) = []; % remove empty epochs
-
-                y(empty_inds) = []; % remove empty epochs
-                
-                if isempty(x) % if no epochs with spikes
-                    
-                    lags = zeros(nbins, 1);
-                    
-                    spk_xcorr = zeros(nbins, 1);
-                    
-                    return
-                    
-                end                    
-
-                epoch = epoch(~empty_inds, :); % remove epochs without spikes
-                                                    
-                nbins = length(-max_lag+t_bin/2:t_bin:max_lag-t_bin/2);
-                
-                spk_xcorr = zeros(nbins, length(x));
-                
-                lags = zeros(nbins, length(x));
-
-                for i = 1 : length(x)
-                    [spk_xcorr(:, i), lags(:, i)] = Spike.CrossCorr(x{i}, y{i}, 'lag', [-max_lag max_lag], 'binsize', t_bin, 'norm', norm);
-                end
-                
-                if average_epochs % cross correlation across all epochs
-                   
-                    spk_xcorr = sum(spk_xcorr, 2);
-                                       
-                    lags = lags(:,1);
-
-                    
-                end
-                
-            else          
-            
-                [spk_xcorr, lags] = Spike.CrossCorr(x, y, 'lag', [-max_lag max_lag], 'binsize', t_bin, 'norm', norm);
-                
-            end
-
-        end
-        
-        function vec_theta = spk_theta(self, cel)
-        % spk_theta = root.spk_theta(cel);
-        %
-        % Returns spike theta phase of cel for every root.epoch. Vector if
-        % one cell, and one root.epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells
-        %
-        % cel -> [tetrode index, cell index]
-        %
-        % andrew 25 may 2010
-        
-        vec_theta = []; % initialize 
-        
-        ind_lfp = self.active_lfp;
-                    
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-            
-            if ~isempty(self.spike)
-                
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indeces exceed number of tetrodes or cells');
-                    return;
-                end
-                
-            end
-            
-            if size(self.epoch,1)>1 || size(cel,1)>1
-                vec_theta = cell(size(self.epoch,1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-                   
-                [~, i] = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    
-                    i = cellfun(@(c) self.spike(cel(j,1), cel(j,2)).i_lfp{ind_lfp}(c), i, 'Unif', 0);
-                    
-                    vec_theta(:,j) = cellfun(@(c) self.b_lfp(ind_lfp).theta_phase(c), i, 'UniformOutput', false); %#ok<AGROW>
-                    
-                elseif size(cel,1)>1
-                    
-                    i = cellfun(@(c) self.spike(cel(j,1), cel(j,2)).i_lfp{ind_lfp}(c), i, 'Unif', 0);
-                    
-                    vec_theta{1,j} = self.b_lfp(ind_lfp).theta_phase(i); %#ok<AGROW>
-                else % i is a cell array of indeces
-                    
-                    i = self.spike(cel(j,1), cel(j,2)).i_lfp{ind_lfp}(i);
-                    
-                    vec_theta = self.b_lfp(ind_lfp).theta_phase(i);
-                end
-
-            end
-            
-        end
-        
-        function vec_x = spk_x(self, cel, legacy)
-        % spk_x = root.spk_x(cel);
-        %
-        % Returns spike x position of cel for every root.epoch. Vector if
-        % one cell, and one root.epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells
-        %
-        % cel -> [tetrode index, cell index]
-        %
-        % andrew 25 may 2010
-        
-        vec_x = []; % initialize 
-        
-            if nargin==3
-                cel = [cel, legacy];
-                help CMBHOME.Session.spk_x
-                warning('CMBH:error', 'Your command is outdated to match toolbox convention');
-            end
-            
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-            
-            if ~isempty(self.spike)
-                
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indeces exceed number of tetrodes or cells');
-                    return;
-                end
-                
-            end
-            
-            if size(self.epoch,1)>1 || size(cel,1)>1
-                vec_x = cell(size(self.epoch,1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-            
-                i = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    vec_x(:,j) = cellfun(@(c) self.b_x(c), i, 'UniformOutput', false); 
-                elseif size(cel,1)>1
-                    vec_x{1,j} = self.b_x(i);
-                else % i is a cell array of indeces
-                    vec_x = self.b_x(i);
-                end
-
-            end
-            
-        end
-        
-        function vec_y = spk_y(self, cel, legacy)
-        % spk_y = root.spk_y(cel);
-        %
-        % Returns spike y position of cel for every root.epoch. Vector if
-        % one cell, and one root.epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells
-        %
-        % cel -> [tetrode index, cell index]
-        %
-        % andrew 25 may 2010
-        
-        vec_y = []; % initialize
-        
-            if nargin==3
-                cel = [cel, legacy];
-                help CMBHOME.Session.spk_y
-                warning('CMBH:error', 'Your command is outdated to match toolbox convention');
-            end
-            
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-            
-            if ~isempty(self.spike)
-                
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indeces exceed number of tetrodes or cells');
-                    return;
-                end
-                
-            end
-            
-            if size(self.epoch,1)>1 || size(cel,1)>1
-                vec_y = cell(size(self.epoch,1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-            
-                i = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    vec_y(:,j) = cellfun(@(c) self.b_y(c), i, 'UniformOutput', false);
-                elseif size(cel,1)>1
-                    vec_y{1,j} = self.b_y(i);
-                else % i is a cell array of indeces
-                    vec_y = self.b_y(i);                
-                end
-                
-            end
-            
-        end
-        
-        function vec_sx = spk_sx(self, cel)
-           vec_x = spk_x(self, cel);
-           vec_y = spk_y(self, cel);
-            
-           
-           vec_pos = spos(self,vec_x,vec_y);
-           
-           if iscell(vec_pos)
-               vec_sx = cellfun(@(x)x(:,1),vec_pos,'UniformOutput',false);
-           else
-               vec_sx = vec_pos(:,1);
-           end           
-        end
-        
-        function vec_sy = spk_sy(self, cel, legacy)
-            vec_x = spk_x(self, cel);
-            vec_y = spk_y(self, cel);
-            
-            vec_pos = spos(self,vec_x,vec_y);
-            
-            if iscell(vec_pos)
-                vec_sy = cellfun(@(x)x(:,2),vec_pos,'UniformOutput',false);
-            else
-                vec_sy = vec_pos(:,2);
-            end
-        end
-        
-        function spk_i = spk_i(self, cel)
-           % spk_ts = root.spk_ts(cel);
-        %
-        % Returns spike timestamps of cel for every root.epoch. Vector if
-        % one cell, and one root.epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells
-        %
-        % cel -> [tetrode index, cell index]
-        %
-        % andrew 25 may 2010
-        
-            spk_i = []; % initialize
-           
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-            
-            if ~isempty(self.spike)
-                
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indeces exceed number of tetrodes or cells');
-                    return;
-                end
-                
-            end
-            
-            if size(self.epoch,1)>1
-                spk_i = cell(size(self.epoch,1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-                
-                i = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    spk_i(:,j) = i;
-                elseif size(cel,1)>1
-                    spk_i{1,j} = i;
-                else % i is a vector and there is only one cell
-                    spk_i = i;
-                end
-
-            end   
-            
-        end
-        
-        function vec_t = spk_ts(self, cel, legacy)
-        % spk_ts = root.spk_ts(cel);
-        %
-        % Returns spike timestamps of cel for every root.epoch. Vector if
-        % one cell, and one root.epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells.
-        %
-        % Note that some spikes may exist in root.epoch, but due to
-        % downsampling to root.fs_video, now exist outside of the epoch
-        % period. Those spikes are not included, so that all of the spk_*
-        % functions return vectors of the same length.
-        %
-        % cel -> [tetrode index, cell index]
-        %
-        % andrew 25 may 2010
-        
-        vec_t = []; % initialize
-        
-            if nargin==3
-                cel = [cel, legacy];
-                help CMBHOME.Session.spk_ts
-                warning('CMBH:error', 'Your command is outdated to match toolbox convention');
-            end
-            
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-            
-            if ~isempty(self.spike)
-                
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indeces exceed number of tetrodes or cells');
-                    return;
-                end
-                
-            end
-            
-            if size(self.epoch,1)>1
-                vec_t = cell(size(self.epoch,1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-
-                [~, i] = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-                %i = IsolateEpoch(self.spike(cel(j,1), cel(j,2)).ts, 1:length(self.spike(cel(j,1), cel(j,2)).ts), self.epoch);
-
-                if iscell(i)
-                    vec_t(:,j) = cellfun(@(c) self.spike(cel(j,1), cel(j,2)).ts(c), i, 'UniformOutput', false);
-                elseif size(cel,1)>1
-                    vec_t{1,j} = self.spike(cel(j,1), cel(j,2)).ts(i);
-                else % i is a vector and there is only one cell
-                    vec_t = self.spike(cel(j,1), cel(j,2)).ts(i);
-                end
-
-            end
-            
-        end
-        
-        function vec_bin = spk_bin(self, cel, dt)
-        % spike_train_binned = root.spk_bin(cel, dt);
-        %
-        % Returns binned spike observations for all root.epoch-s at
-        % binwidth dt (default 2ms). If multiple epochs, vec_bin is a cell
-        % array
-        %
-        % cel -> 2 element vector like [tetrode index, cell index]
-        % dt -> positive time binwidth
-        %
-        % andrew 25 may 2010
-        
-            import CMBHOME.*
-
-            if ~exist('cel', 'var'), 
-                help CMBHOME.Session.spk_bin
-                error('You must indicate a cell.'); 
-            end
-
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-
-            if ~exist('dt', 'var'), dt = .002; end
-
-            epochs = self.epoch;
-            
-            vec_bin = cell(size(epochs,1), 1);
-
-            for i = 1:size(epochs,1)
-
-                self.epoch = epochs(i,:); % set epoch to what we're interested in
-
-                vec_bin{i} = Spike.TS2Bins(self.spk_ts(cel), self.epoch, dt);
-
-            end
-
-            if length(vec_bin)==1, vec_bin = vec_bin{1}; end % convert to array if only one epoch
-        
-            
-        end
-        
-        function vec_vel = spk_vel(self, cel)
-        % spk_vel = root.spk_vel(cel);
-        %
-        % Returns spike running speed of cel for every root.epoch. Vector if
-        % one cell, and one epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells
-        %
-        % cel -> [tetrode index, cell index]
-        %
-        % andrew 25 may 2010
-        
-            vec_vel = []; %initialize
-
-            if ~isempty(self.b_vel), vel = self.b_vel; 
-            else vel = cat(1, 0, sqrt(diff(self.b_x).^2+diff(self.b_y).^2))/self.fs_video^-1;
-            end
-
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-
-            if ~isempty(self.spike)
-
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indeces exceed number of tetrodes or cells');
-                    return;
-                end
-
-            end
-
-            if size(self.epoch,1)>1
-                vec_vel = cell(size(self.epoch, 1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-            
-                i = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    vec_vel(:,j) = cellfun(@(c) vel(c), i, 'UniformOutput', false);
-                elseif size(cel,1)>1
-                    vec_vel{1,j} = vel(i);
-                else % i is a cell array of indeces               
-                    vec_vel = vel(i);                
-                end
-                
-            end
-            
-        end
-        
-        function vec_headdir = spk_headdir(self, cel, legacy)
-        % spk_headdir = root.spk_y(cel);
-        % OLD SYNTAX: root.spk_headdir(tetrode_i, cell_i)
-        %
-        % Returns spike y position of cel for every root.epoch. Vector if
-        % one cell, and one root.epoch, cell array of size MxN where M is
-        % the number of epochs and N is the number of cells
-        %
-        % Arguments:
-        % cel -> Nx2 vector indicating [tetrode, cell].
-        %
-        % requires root.epoch -> Mx2 array of epoch times.
-        %
-        % Returns:
-        %
-        % headdir -> vector if M and N are 1, cell array of size MxN
-        % otherwise (epochs x cells)
-        %
-        % andrew 25 may 2010
-        
-            vec_headdir = []; % initialize
-            
-            if isempty(self.b_headdir), error('No head direction data'); end
-        
-            if nargin==3
-                cel = [cel, legacy];
-                help CMBHOME.Session.spk_headdir
-                warning('CMBH:error', 'Your command is outdated to match toolbox convention');
-            end
-            
-            if numel(cel)<2, error('Cell must be implicated by tetrode index and cell index.'); end
-            
-            if ~isempty(self.spike)
-                
-                if ~all([size(self.spike,1)>=cel(:,1), size(self.spike,2)>=cel(:,2)])
-                    warning('CMBH:error', 'Indices exceed number of tetrodes or cells');
-                    return;
-                end
-                
-            end
-            
-            if size(self.epoch,1)>1 || size(cel,1)>1
-                vec_headdir = cell(size(self.epoch,1) , size(cel,1));
-            end
-            
-            for j = 1:size(cel,1)
-
-                i = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
-                if iscell(i)
-                    vec_headdir(:,j) = cellfun(@(c) self.b_headdir(c), i, 'UniformOutput', false);
-                elseif size(cel,1)>1
-                    vec_headdir{1,j} = self.b_headdir(i);
-                else % i is a cell array of indeces
-                    vec_headdir = self.b_headdir(i);
-                end
-
-            end
-                
-        end
-        
-        function vec_sheaddir = spk_sheaddir(self, cel, legacy)
-           vec_sheaddir = spk_headdir(self,cel,legacy);
-           
-           if iscell(vec_sheaddir)
-               vec_sheaddir = cellfun(@(x)mod(x+self.rotate+180,360)-180,vec_sheaddir,'UniformOutput',false); 
-            else
-                vec_sheaddir = mod(vec_sheaddir+self.rotate+180,360)-180;
-            end
-        end
-        
+       
         function self = AppendKalmanVel(self)
             
             if ~isempty(self.b_vel)
@@ -2113,7 +1388,7 @@ classdef Session
                 
                 self.b_vel = b_vel;
                 
-                warning('CMBH:notify', '%s', 'Added Kalman Velocity to Session Object.');
+                %warning('CMBH:notify', '%s', 'Added Kalman Velocity to Session Object.');
             
             end
         end
@@ -2690,8 +1965,7 @@ if max(i)>length(ts)
 end
 
 t = ts(i);
-% Begin ehren itegration
-%%{
+
 if numel(epoch)>2 && numel(t)>1
     epoch = mat2cell(epoch, ones(1, size(epoch,1)), 2); 
 		
@@ -2705,7 +1979,6 @@ if numel(epoch)>2 && numel(t)>1
         sttime = cellfun(@(a) ceil(fs*a(1))<i(1),epoch);
         epoch(endtime)=cellfun(@(a) [a(1) i(end)/fs],epoch(endtime),'uni',0);
         epoch(sttime)=cellfun(@(a) [i(1)/fs a(2)],epoch(sttime),'uni',0);
-        %epoch=epoch(~sttime,:);			
 
          i_i=cellfun(@(a) [ceil((a(1)-t(1))*fs+1):ceil((a(2)-t(1))*fs)]',epoch,'uni',0); %so now we can generate our own indices
       
@@ -2725,29 +1998,8 @@ else
     
     i_i = find(t>=t_start & t<=t_stop);
 end
-%}
-%backup, pre-ehren integration. 20130811
-%{
-if numel(epoch)>2
-    epoch = mat2cell(epoch, ones(1, size(epoch,1)), 2); 
 
-    %i_i = cellfun(@(a) find(t>=a(1) & t<=a(2)), epoch, 'Unif', 0); %old method, used find rather than logical
-    i_i = cellfun(@(a) (t>=a(1) & t<=a(2)), epoch, 'Unif', 0);
-    
-    i_ts = cellfun(@(c) i(c), i_i, 'unif', 0);
-    
-else
-    t_start = epoch(1);
-    t_stop = epoch(2);
-    
-    %i_i = find(t>=t_start & t<=t_stop); %old method: Used find rather than logical indexing% 
-    i_i = (t>=t_start & t<=t_stop);
-    i_ts = i(i_i);
-    
 end
-%}
-end
-
 function self = SetLFPInds(self)
 
     if ~iscell(self.p_ind)
@@ -2771,7 +2023,8 @@ function self = SetCelInds(self)
     for j = 1:size(cel,1) % now set root.p_cel_ind
 
         [i, i2] = IsolateEpoch(self.b_ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
-
+        %[i, i2] = IsolateEpoch(self.spike(self.cel(1),self.cel(2)).ts, self.spike(cel(j,1), cel(j,2)).i, self.epoch);
+        
         if iscell(i)
 
             if ~isempty(self.active_lfp)

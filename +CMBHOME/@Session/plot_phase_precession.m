@@ -105,7 +105,7 @@ end
 self.active_lfp = lfp;
 
 if isempty(p.Results.results)
-    results = pass_index(self,cel,varargin{:});
+    results = pass_index(self,'cel',cel,varargin{:});
 else
     results = p.Results.results;
 end
@@ -138,21 +138,21 @@ if isfield(results,'flns_raw')
     results.b_raw(k) = results.flns_raw(k);
 end
 [~,k] = unique(results.ts,'first');
-results.b_flns = interp1(results.ts(k),results.flns(k),self.b_ts,'nearest');
-results.b_passindex= interp1(results.ts(k),results.passindex(k),self.b_ts,'nearest');
+%results.b_flns = interp1(results.ts(k),results.flns(k),self.b_ts,'nearest');
+%results.b_passindex= interp1(results.ts(k),results.passindex(k),self.b_ts,'nearest');
 
 self.epoch = traj_epoch;
 
 self.b_myvar = results.b_raw;
-results.spk_raw = self.spk.myvar;
+results.spk_raw = self.cel_myvar;
 
-self.b_myvar = results.b_flns;
-results.spk_flns = self.spk.myvar;
+%self.b_myvar = results.b_flns;
+results.spk_flns = self.cel_myvar;
 
-self.b_myvar = results.b_passindex;
-results.spk_passindex = self.spk.myvar;
+%self.b_myvar = results.b_passindex;
+results.spk_passindex = self.cel_myvar;
 
-results.spk_theta = self.spk.theta;
+results.spk_theta = self.cel_theta;
 
 if iscell(results.spk_passindex)
     results.spk_theta=cell2mat(results.spk_theta);
@@ -165,7 +165,7 @@ end
     [results.un, results.dn] = circcor(results.spk_theta,results.spk_passindex);
 
     
-ts = self.spk.ts;
+ts = self.cel_ts;
 if ~iscell(ts)
     ts = {ts};
 end
@@ -359,10 +359,10 @@ for i=1:length(plots)
         
         if iscell(self.x)
             cellfun(@(x,y)line(x,y,'Color','k','LineWidth',1),self.x,self.y);
-            scatter(cell2mat(self.spk.x),cell2mat(self.spk.y), 10, cell2mat(spk_val), 'filled');
+            scatter(cell2mat(self.cel_x),cell2mat(self.cel_y), 10, cell2mat(spk_val), 'filled');
         else
             line(self.x,self.y,'Color','k','LineWidth',1);
-            scatter(self.spk.x,self.spk.y, 10,cell2mat(spk_val),'filled');
+            scatter(cell2mat(self.cel_x),cell2mat(self.cel_y), 10,cell2mat(spk_val),'filled');
         end
         
         colormap(colors);
@@ -444,7 +444,7 @@ results.is_precessing = p<0.05&&rad2deg(s*2)<-22&&rad2deg(s*2)>-1440;
             
 %             keyboard
             %%
-            self.b_myvar=results.b_passindex;
+%            self.b_myvar=results.b_passindex;
             ns = histcn([rad2deg(results.spk_theta) results.spk_passindex],linspace(0,360,101),linspace(-1,1,41));
             
             t = cell2mat2(self.ts);
@@ -482,7 +482,7 @@ results.is_precessing = p<0.05&&rad2deg(s*2)<-22&&rad2deg(s*2)>-1440;
         else [nspike,xaxis] = hist(results.spk_passindex,20); end;
         
         
-        self.b_myvar = results.b_passindex;
+%        self.b_myvar = results.b_passindex;
         self.epoch = traj_epoch;
         
         if iscell(self.myvar)

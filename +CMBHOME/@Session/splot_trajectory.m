@@ -24,7 +24,7 @@ ScatterParams = p.Results.ScatterParams;
 
     pad = [-.03 .02]; % percent padding around plot
     
-    [spk_x, spk_y] = ContinuizeEpochs(self.spk_sx(cel), self.spk_sy(cel));
+    [spk_x, spk_y] = ContinuizeEpochs(self.cel_sx, self.cel_sy);
         
     x = Cell2MatPlus(self.sx);
     y = Cell2MatPlus(self.sy);

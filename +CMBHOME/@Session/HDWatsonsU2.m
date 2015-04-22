@@ -36,6 +36,6 @@ for i = 1:size(epochs, 1)
     
     self.epoch = epochs(i,:);
     
-    watsonsu2(i) = Spike.WatsonsU2(self.spk_headdir(cel), self.headdir);
+    watsonsu2(i) = Spike.WatsonsU2(self.cel_headdir, self.headdir);
     
 end

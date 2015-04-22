@@ -84,7 +84,7 @@ omit_noocc = p.Results.omit_noocc;
 if continuize_epochs, root = MergeEpochs(root); end % so that we don't double count data
 
 [occupancy, xdim, ydim] = root.Occupancy(xdim, ydim, continuize_epochs, binside);
-
+occupancy= occupancy*root.fs_video; %bring back to samples
 binside = root.spatial_scale * diff(xdim(1:2)); % solve for binside in case xdim and ydim were specified
 
 if omit_islands, occupancy = OmitIslands(occupancy); end

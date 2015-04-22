@@ -117,7 +117,7 @@ for i=1:numel(plots)
                     axis off equal;
                     set(gca,'YDir','normal');
                     hold off;
-                    freezeColors;
+                    CMBHOME.Utils.freezeColors;
                 case 3 % 3D
                     set(gcf,'Renderer','OpenGL');
                     pk = quantile(map(occupancy>0),0.99);
@@ -198,7 +198,7 @@ for i=1:numel(plots)
                         axis off equal;
                         set(gca,'YDir','normal');
                         hold off;
-                        freezeColors;
+                        CMBHOME.Utils.freezeColors;
                     case 3 %3D
                         set(gcf,'Renderer','OpenGL');
                         [cbar, clims] = smart_colorbar([0 1], hot(255));
@@ -259,7 +259,7 @@ for i=1:numel(plots)
                 'HorizontalAlignment','Right',...
                 'VerticalAlignment','baseline');
             colormap jet;
-            freezeColors;
+            CMBHOME.Utils.freezeColors;
         otherwise
             warning('pass_index:bad_plot','Cannot recognize plot. Skipping...');
     end

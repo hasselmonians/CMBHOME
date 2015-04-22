@@ -18,7 +18,7 @@ function [S, f] = plot_spk_spectrum(self, cel)
     params.fpass = [0 20];
     params.pad = 6;
     
-    spk_ts = self.spk_ts(cel);
+    spk_ts = self.cel_ts;
     
     if iscell(spk_ts)
         if length(spk_ts)>10
@@ -27,8 +27,8 @@ function [S, f] = plot_spk_spectrum(self, cel)
                 return
             end
             
-            S = cell(length(spk_ts,1);
-            f = cell(length(spk_ts,1);
+            S = cell(length(spk_ts,1));
+            f = cell(length(spk_ts,1));
     
         end
         

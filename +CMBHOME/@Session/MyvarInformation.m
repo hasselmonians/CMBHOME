@@ -45,7 +45,7 @@ end
 
 %%
 occupancy = histc(cell2mat2(self.myvar),dim)/self.fs_video;
-rate_map = histc(cell2mat2(self.spk.myvar),dim)./occupancy;
+rate_map = histc(cell2mat2(self.cel_myvar),dim)./occupancy;
 
 if std_smooth_kernel>0
     halfWidth = floor(length(rate_map)/2);
