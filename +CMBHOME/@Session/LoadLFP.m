@@ -30,7 +30,7 @@ if ~isa(self.b_lfp, 'CMBHOME.LFP'), self.b_lfp = CMBHOME.LFP; end
 
 
 p = inputParser;
-p.addParamValue('dataPath', dropboxPath, @(x) ischar(x));                  % Make all final paths relative to this folder
+p.addParamValue('dataPath', [] , @(x) ischar(x));                  % Make all final paths relative to this folder
 p.addParamValue('ifScale',  1,           @(x) (x==1) || (x==0));           % scale eeg data?
 p.addParamValue('ifHD', 1,               @(x) (x==1) || (x==0));           % use egf instead of eeg if available?
 p.addParamValue('downsample', 0,         @(x) isnumeric(x));               % [0] downsample to default of 250 Hz if set to 1, or to specific sampling rate if set to anything other than 1
@@ -236,7 +236,16 @@ for i = 1:length(ind)
         
         if length(unique(fs))~=1, warning('CMBH:notify', '%s', ['Sampling rate in ' fname ' is not consistent. Check timestamps.']); end
         
-        decimation_factor = round(fs(1)/400); % we want to downsample to around 400 Hz
+        %decimation_factor = round(fs(1)/400); % we want to downsample to around 400 Hz
+        if downsample == 1
+            rate = 400;
+        elseif downsample == 0
+            rate = 400;
+        else
+            rate = downsample;
+        end
+        
+        decimation_factor = round(fs(1)/rate); %want to downsample to near rate Hz.
         
         decimation_factor = 2^(nextpow2(decimation_factor)-1); % simplifies our downsampling between time and signal
         
