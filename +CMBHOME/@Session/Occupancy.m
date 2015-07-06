@@ -40,10 +40,6 @@ if ( ~exist('xdim', 'var') || ~exist('ydim', 'var') ) || (isempty(xdim) || isemp
     
 end
 
-if numel(ydim) == 1
-            ydim(2) = ydim(1) + 1;
-        end
-
 if ~iscell(x)
 
     occupancy = hist3([x, y], 'Edges', {xdim, ydim}) / self.fs_video;

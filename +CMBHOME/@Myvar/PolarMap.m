@@ -115,8 +115,7 @@ if ifPlot
    
    polar(theta,tc)
    hold on
-   mrr = nanmean(mr);
-   plot([0 cos(ang_hd)*mrr],[0 sin(ang_hd)*mrr],'r','LineWidth',3)
+   plot([0 cos(ang_hd)*max(tc)],[0 sin(ang_hd)*max(tc)],'r','LineWidth',3)
    
    
    

@@ -117,9 +117,7 @@ classdef Import
             ExtractHeader = 0;
             ExtractionMode = 1;
             [t, x, y, headdir] = Nlx2MatVT(video_file, FieldSelectionArray,ExtractHeader,ExtractionMode);
-            
-            % fix the headdir difference in neuralynx:
-            headdir = wrapTo180(headdir - 90);
+
             %% Load Event Files
             FieldSelectionArray = [1 0 0 0 1];
             ExtractHeader = 0;
