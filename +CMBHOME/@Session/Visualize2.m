@@ -1017,10 +1017,10 @@ uicontrol('Style','edit',... % one textbox
                     
                     hold on
                     for i = 1:length(m)
-                        t = [(i-1)*32+11:(i)*32+10] + (i-1)*5;
+                        t = [(i-1)*length(m{i})+11:(i)*length(m{i})+10] + (i-1)*5;
                         t = [t fliplr(t)];
                         patch(t,[m{i}+s{i} fliplr(m{i}-s{i})],[.8 .8 .8],'EdgeColor',[.8 .8 .8]);
-                        t = [(i-1)*32+11:(i)*32+10] + (i-1)*5;
+                        t = [(i-1)*length(m{i})+11:(i)*length(m{i})+10] + (i-1)*5;
                         plot(t,m{i},'r','LineWidth',3)
                     end
 
