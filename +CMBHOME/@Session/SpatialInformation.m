@@ -91,3 +91,7 @@ spatial_information = spatial_information(:);
 spatial_information(n_spikes<n_thresh) = NaN; % where spiking was too low, get rid of spatial information score
 
 end
+
+
+
+

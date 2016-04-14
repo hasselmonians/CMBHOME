@@ -652,7 +652,7 @@ uicontrol('Style','edit',... % one textbox
 
             if size(self.epoch, 1)>1
                 N_spikes = CMBHOME.Utils.ContinuizeEpochs(self.cel_ts);
-                N_spikes = length(vertcat(N_spikes{:}));
+                N_spikes = length(N_spikes);
             else
                 N_spikes = length(self.cel_ts {1});
             end
@@ -720,7 +720,7 @@ uicontrol('Style','edit',... % one textbox
 
                 if size(self.epoch, 1)>1
                     N_spikes = CMBHOME.Utils.ContinuizeEpochs(self.cel_ts);
-                    N_spikes = length(vertcat(N_spikes{:}));
+                    N_spikes = length(N_spikes);
                 else
                     N_spikes = length(self.cel_ts{1});
                 end
@@ -1014,6 +1014,9 @@ uicontrol('Style','edit',... % one textbox
                     subplot('Position', [a_ws(fig_ind), a_hs(fig_ind), a_w, a_h]),
                     m = {self.user_def.waveform(ind,:).mean};
                     s = {self.user_def.waveform(ind,:).std};
+                    
+                    m=cellfun(@(x) x(:)', m,'UniformOutput',0);
+                    s=cellfun(@(x) x(:)', s,'UniformOutput',0);
                     
                     hold on
                     for i = 1:length(m)

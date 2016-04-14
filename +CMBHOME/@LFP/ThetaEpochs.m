@@ -17,7 +17,7 @@ thresh = 2;
 
 merge_if = .05; %(seconds) epochs which are this close to one another are merged
 
-remove_if = 10; % (seconds) epochs less than this are removed
+remove_if = 2.5; % (seconds) epochs less than this are removed
 
 if ~exist('window', 'var')
     
@@ -71,13 +71,15 @@ for i = 1:length(s_i)
     
 end
 
-ind = ThresholdBandDetect(P_r, thresh, inf, merge_if*self.fs, remove_if*self.fs);   % returns all indeces for epochs longer than .5 seconds that meet threshold
+P_r = theta_amplitude ./ delta_amplitude;
+
+ind = CMBHOME.Utils.OverThresholdDetect(P_r, thresh, merge_if*self.fs, remove_if*self.fs);   % returns all indeces for epochs longer than .5 seconds that meet threshold
                                                                                                     % from +CMBHOME/+Utils
-% if ~isempty(ind)
-%         
-%     epochs = self.ts(ind); % set epochs to valid running epochs
-%         
-% end
+if ~isempty(ind)
+        
+    epochs = self.ts(ind); % set epochs to valid running epochs
+        
+end
 
 P_r = P_r(:);
 ts = ts(:);

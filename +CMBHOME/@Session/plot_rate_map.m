@@ -12,7 +12,9 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
 
     if ~exist('suppress_plot', 'var')
         suppress_plot=0;
-    end
+    end 
+%   xdim                vector of bin edges along x dimension
+%   ydim                vector of bin edges along y dimension
     
     if ~exist('mergeepochs', 'var'), mergeepochs = 1; end
     
@@ -79,12 +81,11 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
     
     if ~suppress_plot && mergeepochs==1
         figure
-        rate_map(no_occupancy==0) = NaN;
-        [cbar, clims] = SmartColorbar(clims, 'jet(255)');
         t=imagesc(xdim, ydim, rate_map, clims);
-        colormap(cbar);
+        colormap jet(255);
         axis equal
-        axis off
+
+        set(gca, 'Box', 'on')
 
         xlim(xs.*pad+xs);
         ylim(ys.*pad+ys);
@@ -95,13 +96,13 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
 
         set(gca,'YDir','normal'); % so plotting functions dont reverse axis
 
-        %set(t, 'AlphaDataMapping', 'none');   %   until this works properly
+        set(t, 'AlphaDataMapping', 'none');   %   until this works properly
                                                   %without screwing up other axes in the subplot, screw it!
-        %set(gca, 'DrawMode', 'fast');
-        %set(t,'AlphaData', no_occupancy);
+        set(gca, 'DrawMode', 'fast');
+        set(t,'AlphaData', no_occupancy);
 
-        %set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
-        %set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
+        set(gca,'XTickLabel',cellfun(@(x) str2num(x), get(gca,'XTickLabel'))*(self.spatial_scale))
+        set(gca,'YTickLabel',cellfun(@(x) str2num(x), get(gca,'YTickLabel'))*(self.spatial_scale))
         
     elseif ~suppress_plot && mergeepochs == 0
         for i = 1:size(occupancy,3)
@@ -121,13 +122,13 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
 
             set(gca,'YDir','normal'); % so plotting functions dont reverse axis
 
-            %set(t, 'AlphaDataMapping', 'none');   %   until this works properly
+            set(t, 'AlphaDataMapping', 'none');   %   until this works properly
                                                       %without screwing up other axes in the subplot, screw it!
-            %set(gca, 'DrawMode', 'fast');
+            set(gca, 'DrawMode', 'fast');
             set(t,'AlphaData', no_occupancy(:,:,i)');
             
-            set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
-            set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
+            %set(gca,'XTickLabel',str2num(get(gca,'XTickLabel'))*(self.spatial_scale))
+            %set(gca,'YTickLabel',str2num(get(gca,'YTickLabel'))*(self.spatial_scale))
         end
     end
 

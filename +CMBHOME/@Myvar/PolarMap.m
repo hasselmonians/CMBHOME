@@ -37,7 +37,7 @@ import CMBHOME.Utils.*
 p = inputParser;
 p.addParamValue('binsize', 2*pi/60, @(x) isnumeric(x)); % 6 degrees default binsize
 p.addParamValue('Continuize',  0, @(x) numel(x)==1);
-p.addParamValue('ifPlot', 0, @(x) isnumeric(x));
+p.addParamValue('ifPlot', 1, @(x) isnumeric(x));
 p.addParamValue('axis', [], @(x) isnumeric(x));
 
 p.parse(varargin{:});
@@ -115,8 +115,7 @@ if ifPlot
    
    polar(theta,tc)
    hold on
-   mrr = nanmean(mr);
-   plot([0 cos(ang_hd)*mrr],[0 sin(ang_hd)*mrr],'r','LineWidth',3)
+   plot([0 cos(ang_hd)*max(tc)],[0 sin(ang_hd)*max(tc)],'r','LineWidth',3)
    
    
    

@@ -168,7 +168,7 @@ classdef Session
         %
         % andrew 24 may 2010
         
-        warning('CMBH:notify', '%s', 'This function is not tested, and could be tweaked so that it is more useful. Come see me if you have comments or suggestions, andrew.');
+        warning('CMBH:notify', '%s', 'Warning: If you want to merge the LFP as well you must load it, resave the files, then run this function');
         
         import CMBHOME.*
         f_ind=1;
@@ -194,53 +194,70 @@ classdef Session
             fopen = cellarray_filenames;
         end
         
-        t_start = 0;
-        
-        ind_offset = 0;
-        
-        root = Session('path_lfp', 'Merged Sessions, see root.path_raw_data for original file names', ...
-            'path_raw_data', fopen, 'date_created', now, 'name', 'Merged Sessions, see root.path_raw_data.');
-        
+        clear x, clear y, clear ts, clear hd, clear vel
+        clear spike, clear even, clear event, clear lfp
         for i = 1:length(fopen)
-            
             tmp = load(fopen{i});
-            
-            offset = tmp.root.b_ts(1) - t_start;
-            
-            if i==1, 
-                root.fs_video = tmp.root.fs_video; 
-                root.spatial_scale = tmp.root.spatial_scale;
-            end
-            
-            root.b_ts = cat(1, root.b_ts, tmp.root.b_ts-offset);
-            
-            tmp.root.event(:,2) = num2cell([tmp.root.event{:,2}]-offset);
-            
-            root.b_x = cat(1, root.b_x, tmp.root.b_x);
-            root.b_y = cat(1, root.b_y, tmp.root.b_y);
-            root.b_headdir = cat(1, root.b_headdir, tmp.root.b_headdir);
-            root.event = cat(1, root.event, tmp.root.event, {[fopen{i} ' start'], t_start}, {[fopen{i} ' end'], t_start + (tmp.root.b_ts(end)-tmp.root.b_ts(1))});
-            
-            tmp.root.cell_thresh = [ 0 0 ];
-            
-            for j = 1:size(tmp.root.cells,1)
-                
-                tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).ts = tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).ts - offset; % shift indices and timestamps
-                tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).i = tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).i + ind_offset;
-                
-                if all(size(root.spike)>=tmp.root.cells(j,:))
-                    root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).ts = cat(1, root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).ts, tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).ts);
-                    root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).ts = cat(1, root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).i, tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)).i);
-                else
-                    root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2)) = tmp.root.spike(tmp.root.cells(j,1), tmp.root.cells(j,2));
-                end
-                
-            end
-            
-            ind_offset = ind_offset + length(tmp.root.b_ts)+1;
-            t_start = t_start + (tmp.root.b_ts(end)-tmp.root.b_ts(1))+1; % 1 second buffer
-            
+            x{i}=tmp.root.b_x;
+            y{i}=tmp.root.b_y;
+            ts{i}=tmp.root.b_ts;
+            hd{i}=tmp.root.b_headdir;
+            vel{i}=tmp.root.vel;
+            spike{i}=tmp.root.spike;
+            event{i}=tmp.root.event;
+            lfp{i}=tmp.root.b_lfp;
+            fs = tmp.root.fs_video;
+            ss = tmp.root.spatial_scale;           
         end
+        
+        x=CMBHOME.Utils.ContinuizeEpochs(x(:)); y=CMBHOME.Utils.ContinuizeEpochs(y(:));
+        hd=CMBHOME.Utils.ContinuizeEpochs(hd(:)); vel=CMBHOME.Utils.ContinuizeEpochs(vel(:));
+        event=CMBHOME.Utils.ContinuizeEpochs(event(:));
+        
+        %ts
+        firsts = cellfun(@(x) x(1), ts);
+        ts=cellfun(@(x) x-x(1), ts,'UniformOutput',0);
+        ends = cellfun(@(x) x(end), ts);
+        offset = [0 ends(1:end-1)+ts{1}(1)];
+        ts=arrayfun(@(x,y) x{1}+y, ts,offset,'UniformOutput',0);
+        ts=CMBHOME.Utils.ContinuizeEpochs(ts(:));
+        
+        %spike
+        spk_ts = cell(size(spike{1}));
+        for i = 1:numel(spike)
+            for k = 1:numel(spike{i})
+                spk_ts{k} = [spk_ts{k}; spike{i}(k).ts + offset(i)-firsts(i)];
+            end
+        end
+        
+        for i = 1:numel(spk_ts)
+            if ~isempty(spk_ts{i})
+                spike2(i) = CMBHOME.Spike('ts',spk_ts{i},'vid_ts',ts);
+            else
+                spike2(i) = CMBHOME.Spike();
+            end
+        end
+        sz=max(CMBHOME.Utils.ContinuizeEpochs(cellfun(@(x) size(x), spike(:),'UniformOutput',0)));
+        spike=reshape(spike2,sz);
+        
+        %LFP
+        lfp_fs=lfp{1}.fs; 
+        lfp_sig=cell(size(lfp{1})); lfp_ts=cell(size(lfp{1}));
+        for i = 1:numel(lfp)
+            for k = 1:numel(lfp{i})
+                lfp_ts{k} = [lfp_ts{k}; lfp{i}(k).ts+offset(i)-firsts(i)];
+                lfp_sig{k} = [lfp_sig{k}; lfp{i}(k).signal];
+            end
+        end
+        
+        for i = 1:numel(lfp_ts)
+            lfp2(i) = CMBHOME.LFP(lfp_sig{i}, lfp_ts{i},lfp_fs,'merged');
+        end
+        
+        % Make it:
+        root = Session('b_x',x,'b_y',y,'b_headdir',hd,'b_ts',ts,...
+                       'fs_video',fs, 'spatial_scale',ss,...
+                        'b_lfp',lfp2, 'spike', spike);
         
         end
     end
@@ -258,7 +275,7 @@ classdef Session
             p.addParamValue('b_y',          [], @(x) any(size(x)<=1)); 
             p.addParamValue('b_headdir',        [], @(x) any(size(x)<=1)); 
             p.addParamValue('b_ts',         [], @(x) any(size(x)<=1)); 
-            p.addParamValue('b_lfp',         CMBHOME.LFP, @(x) isstruct(x));
+            p.addParamValue('b_lfp',         CMBHOME.LFP, @(x) isstruct(x)||isa(x,'CMBHOME.LFP'));
             p.addParamValue('fs_video',     [], @(x) length(x)==1);
             p.addParamValue('raw_pos',      [], @(x) length(x)==1);
             p.addParamValue('raw_headdir',      [], @(x) length(x)==1);
@@ -269,7 +286,7 @@ classdef Session
             p.addParamValue('path_raw_data',[]);
             p.addParamValue('date_created', now, @(x) isnumeric(x));
             p.addParamValue('spatial_scale',.5, @(x) length(x)==1);
-            p.addParamValue('epoch',        [0 1], @(x) numel(x)==2);
+            p.addParamValue('epoch',        [-inf inf], @(x) numel(x)==2);
             p.addParamValue('spike',        Spike, @(x) isa(x, 'CMBHOME.Spike'));
                  
             p.parse(varargin{:});
@@ -697,9 +714,9 @@ classdef Session
         function vel = get.vel(self)
         % returns pixels/sec
             if isempty(self.b_vel)
-                self = AppendKalmanVel(self);
-%                self.b_vel = sqrt(([0;diff(self.b_x)]).^2+([0;diff(self.b_y)]).^2) * self.fs_video;
-%                warning('No vel set, setting simple derivative. Recommended: root=root.AppendKalmanVel   (slow)');
+                %self = AppendKalmanVel(self);
+                self.b_vel = sqrt(([0;diff(self.b_x)]).^2+([0;diff(self.b_y)]).^2) * self.fs_video;
+                warning('No vel set, setting simple derivative. Recommended: root=root.AppendKalmanVel   (slow)');
             end
             
             vel = [];
@@ -1089,18 +1106,18 @@ classdef Session
                 return
             end
             
-            %cel_ts = cell(size(self.epoch,1),size(self.cel,1));
+            cel_ts = cell(size(self.epoch,1),size(self.cel,1));
             
             for i = 1:size(self.cel,1)
                 cel = self.cel(i,:);
-            %    spks_ts = self.spike(cel(1), cel(2)).ts;
+                spks_ts = self.spike(cel(1), cel(2)).ts;
                 
-            %    for k = 1:size(self.epoch,1)
-            %        curInds = spks_ts >= self.epoch(k,1) & spks_ts <= self.epoch(k,2);
-            %        cel_ts{k,i} = spks_ts(curInds);
-            %    end
-                cel = self.cel(i,:);
-                cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
+                for k = 1:size(self.epoch,1)
+                    curInds = spks_ts >= self.epoch(k,1) & spks_ts <= self.epoch(k,2);
+                    cel_ts{k,i} = spks_ts(curInds);
+                end
+                %cel = self.cel(i,:);
+                %cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
             end  
         end
 

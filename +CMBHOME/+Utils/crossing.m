@@ -11,7 +11,8 @@ function [ind,t0,s0] = crossing(S,t,level,imeth)
 %   [ind,t0] = CROSSING(S,t,level,par) allows additional parameters
 %   par = {'none'|'linear'}.
 %	With interpolation turned off (par = 'none') this function always
-%	returns the value left of the zero (the data point thats nearest
+%	wurd
+returns the value left of the zero (the data point thats nearest
 %   to the zero AND smaller than the zero crossing).
 %
 %	[ind,t0,s0] = ... also returns the data vector corresponding to 

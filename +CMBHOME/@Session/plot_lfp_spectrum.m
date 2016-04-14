@@ -11,7 +11,7 @@ function plot_lfp_spectrum(self, TBP, n_tapers, f_range, theta_analysis)
 
     import CMBHOME.Utils.*
     
-    %AddChronuxPackage;
+    AddChronuxPackage;
        
     if ~exist('TBP', 'var')
         TBP = 10;

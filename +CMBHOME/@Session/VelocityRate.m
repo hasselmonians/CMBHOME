@@ -18,7 +18,7 @@ function [f_cell, vel_dim] = VelocityRate(self, cel, vel_dim)
 % andrew 17 may 2010
 self.cel = cel;
 if ~exist('vel_dim', 'var')
-    vel_dim = 0:self.spatial_scale^-1:max(self.vel);
+    vel_dim = 0:self.spatial_scale^-1:prctile(CMBHOME.Utils.ContinuizeEpochs(self.vel),95);
 end
 
 if isempty(self.b_vel), disp('Warning, no user specified velocity assigned. The simple derivative thus used may not be optimal for this analysis'); end

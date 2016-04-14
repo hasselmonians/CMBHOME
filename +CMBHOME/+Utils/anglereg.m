@@ -1,15 +1,5 @@
 function [ s,b ] = anglereg( x, theta, tolerance, maxiter )
 
-%     clear all;
-%     setupPPeg
-%     results = plot_phase_precession(root,'plots',{});
-%     root.b_myvar = results.b_passindex;
-%
-%     %%
-%     x = root.spk.myvar;
-%     theta = root.spk.theta;
-%     clear all;
-%     load('C:\Users\Jason\ehrenDropbox\Dropbox\regneed.mat')
 
 if ~exist('tolerance','var')
     tolerance=0;

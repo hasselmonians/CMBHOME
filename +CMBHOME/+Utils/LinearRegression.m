@@ -44,7 +44,7 @@ if ~exist('ifPlot','var')
 end
 
 if ifPlot==1
-    figure
+    
     plot(x,y,'.')
     hold on
     xv = [min(x) max(x)];
