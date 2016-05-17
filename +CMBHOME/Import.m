@@ -113,11 +113,18 @@ classdef Import
             %% Load Raw Video File
             % Note that these vectors may need error checking. These can be performed
             % later.
-            FieldSelectionArray = [1 1 1 1 0 0];
-            ExtractHeader = 0;
-            ExtractionMode = 1;
-            [t, x, y, headdir] = Nlx2MatVT(video_file, FieldSelectionArray,ExtractHeader,ExtractionMode);
-
+            
+            if isempty(strfind(video_file,'mat'))
+                FieldSelectionArray = [1 1 1 1 0 0];
+                ExtractHeader = 0;
+                ExtractionMode = 1;
+                [t, x, y, headdir] = Nlx2MatVT(video_file, FieldSelectionArray,ExtractHeader,ExtractionMode);
+            
+            else
+                t=load(video_file);
+                x=t.x; y=t.y;headdir=t.hd;t=t.ts;
+            end
+                
             %% Load Event Files
             FieldSelectionArray = [1 0 0 0 1];
             ExtractHeader = 0;
@@ -389,7 +396,7 @@ classdef Import
                 
                 video_file = [];
                 
-                video_files = dir(fullfile(base_path, '*.nvt'));
+                video_files = [dir(fullfile(base_path, '*.nvt'));dir(fullfile(base_path, '*.mat'))];
                 
                 if noprompt & length(video_files)>1
                     
@@ -409,7 +416,7 @@ classdef Import
 
                     if noprompt, disp('Batch process could not find proper video file'); return; end
 
-                    [load_file, base_path] = uigetfile('*.Nvt;*.nvt','Please select Neuralynx video (.Nvt) file to load', base_path);
+                    [load_file, base_path] = uigetfile('*.Nvt;*.nvt;*.mat','Please select Neuralynx video (.Nvt) file to load', base_path);
 
                     if load_file
                         video_file = fullfile(base_path, load_file);
