@@ -219,6 +219,7 @@ classdef Session
         ts=cellfun(@(x) x-x(1), ts,'UniformOutput',0);
         ends = cellfun(@(x) x(end), ts);
         offset = [0 ends(1:end-1)+ts{1}(1)];
+        offset = cumsum(offset);
         ts=arrayfun(@(x,y) x{1}+y, ts,offset,'UniformOutput',0);
         ts=CMBHOME.Utils.ContinuizeEpochs(ts(:));
         
