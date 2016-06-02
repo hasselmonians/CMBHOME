@@ -51,10 +51,10 @@ function Visualize2(self)
           'BackgroundColor', 'w','Callback',{@title_Callback}, 'HandleVisibility', 'off', 'Value', 1);
     check_ind = check_ind+1;  
     
-    check_objarr(check_ind) = uicontrol('Style','checkbox','String','Rate Map',...
+    check_objarr(check_ind) = uicontrol('Style','checkbox','String','Trajectory',...
           'Position',[check_posx(check_ind), control_height - 125 - 25*check_ind, check_size],...
-          'BackgroundColor', 'w','Callback',{@ratemap_Callback}, 'HandleVisibility', 'off');
-    check_ind = check_ind+1;  
+          'BackgroundColor', 'w','Callback',{@trajectory_Callback}, 'HandleVisibility', 'off');
+    check_ind = check_ind+1;    
     
     if length(self.b_headdir)==length(self.b_x)
     check_objarr(check_ind) = uicontrol('Style','checkbox','String','Polar Rate Map',...
@@ -63,10 +63,10 @@ function Visualize2(self)
     check_ind = check_ind+1;    
     end
     
-    check_objarr(check_ind) = uicontrol('Style','checkbox','String','Trajectory',...
+    check_objarr(check_ind) = uicontrol('Style','checkbox','String','Rate Map',...
           'Position',[check_posx(check_ind), control_height - 125 - 25*check_ind, check_size],...
-          'BackgroundColor', 'w','Callback',{@trajectory_Callback}, 'HandleVisibility', 'off');
-    check_ind = check_ind+1;  
+          'BackgroundColor', 'w','Callback',{@ratemap_Callback}, 'HandleVisibility', 'off');
+    check_ind = check_ind+1;
 
     check_objarr(check_ind) = uicontrol('Style','checkbox','String','ISI Histogram',...
           'Position',[check_posx(check_ind), control_height - 125 - 25*check_ind, check_size],...
@@ -397,10 +397,10 @@ uicontrol('Style','edit',... % one textbox
        
         if (get(source,'Value') == get(source,'Max'))
            % Checkbox is checked-take approriate action
-           plot_vec(1) = 1;
+           plot_vec(3) = 1;
         else
            % Checkbox is not checked-take approriate action
-           plot_vec(1) = 0;
+           plot_vec(3) = 0;
         end
           
     end
@@ -421,10 +421,10 @@ uicontrol('Style','edit',... % one textbox
 
         if (get(source,'Value') == get(source,'Max'))
            % Checkbox is checked-take approriate action
-           plot_vec(3) = 1;
+           plot_vec(1) = 1;
         else
            % Checkbox is not checked-take approriate action
-           plot_vec(3) = 0;
+           plot_vec(1) = 0;
         end
       
     end
