@@ -1,6 +1,5 @@
 function R = CorrelateRateMaps(self, cel, obj2, cel2, supress_plot)
-% (1) R = root.CorrelateRateMaps(cel);
-% (2) R = root.CorrelateRateMaps(cel, obj2, cel2);
+% Calculates the pearson correlation coefficient between two ratemaps
 %
 % (1) Calculates rate maps for cell in cel = [t, c]; in current root, prompts
 % user to indicate another session object and cell to compare. If two cells
@@ -13,8 +12,8 @@ function R = CorrelateRateMaps(self, cel, obj2, cel2, supress_plot)
 %
 % To calculate rate map uses: root.plot_rate_map, and calculates the 
 % pearsons correlation coefficient between the two
-%
-% andrew bogaard 9 sept 2010
+% (1) R = root.CorrelateRateMaps(cel);
+% (2) R = root.CorrelateRateMaps(cel, obj2, cel2);
 
 if ~exist('supress_plot', 'var'), supress_plot = 0; end
 

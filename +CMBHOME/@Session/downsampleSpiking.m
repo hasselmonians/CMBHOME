@@ -1,4 +1,7 @@
 function self = downsampleSpiking(self,cel,f)
+% Randomly removes spikes to achieve a lower mean firing rate
+%
+% root = root.downsampleSpiking(cel, newMean)
 
 if ~exist('cel','var')
     if isempty(cel)

@@ -1,9 +1,10 @@
 function [rate_map, xdim, ydim, occupancy, no_occupancy] = RateMap(self, varargin)
+% Returns matrix rate_map with x and y dimensions in vectors xs and ys. 
+%
 % [rate_map, xs, ys] = root.plot_rate_map(cel, varargin)
 %
 % Plots spatial rate map for cell cel = [ tetrode, cell ]
 %
-% Returns matrix rate_map with x and y dimensions in vectors xs and ys. 
 %
 % ARGUMENTS
 %   cel             1 x 2 vector like [tetrode index, cell index]

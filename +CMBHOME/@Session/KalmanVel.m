@@ -1,9 +1,5 @@
 function [t,x,y,vx,vy,ax,ay] = KalmanVel(posx,posy,post,order,Q,R)
-% root.KalmanVel(x, y, t, order);
-%
-% Code adapted from Sturla Molden (see below) to work within CMBHOME
-% framework. Returns the velocity estimation using the Kalman Filter on
-% recorded position.
+% Returns the velocity estimation using the Kalman Filter on recorded position.
 %
 % Kalman filter for obtaining an appriximate Bayesian MAP estimate  to the rat's 
 % trajectory from raw video tracker data.
@@ -70,6 +66,7 @@ function [t,x,y,vx,vy,ax,ay] = KalmanVel(posx,posy,post,order,Q,R)
 % Norwegian University of Science and Technology
 %
 %
+% [t,x,y,vx,vy,ax,ay] = KalmanVel(posx,posy,post,order,Q,R)
 
 % Default values. These are manually tuned for good performance
 if (nargin < 5)

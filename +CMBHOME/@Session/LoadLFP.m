@@ -1,7 +1,4 @@
 function self = LoadLFP(self, ind, varargin)
-% (1) root = root.LoadLFP
-% (2) root = root.LoadLFP(indices)
-%
 % Loads LFP data file into root.b_lfp property
 %
 % (1) Loads root.path_lfp(root.active_lfp)
@@ -11,7 +8,8 @@ function self = LoadLFP(self, ind, varargin)
 % files can be imported. other methods
 % can be added
 %
-% wchapman 20130927
+% (1) root = root.LoadLFP
+% (2) root = root.LoadLFP(indices)
 
 %% Setup
 import CMBHOME.Utils.* %need path2lfp

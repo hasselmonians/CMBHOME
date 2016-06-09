@@ -1,8 +1,5 @@
  function [spk_xcorr, lags, epoch, std_error] = spk_xcorr(self, cells, max_lag, t_bin, average_epochs, norm)
-    % [cor, lag, epoch, std_error] = root.spk_xcorr(cel, max_lag,t_bin, average_epochs);
-    %
-    % Returns the unbiased crosscorrelation, or autocorrelation for cell(s) in
-    % cel
+    % Returns the unbiased crosscorrelation, or autocorrelation
     %
     % ARGUMENTS
     %   cells               a Nx2 (N=1 or 2) array of cells for which to
@@ -29,7 +26,8 @@
     %   std_error           if average_epochs=1, then the average error
     %                       for each lag timepoint is returned for the averaged cor vector
     %
-    % andrew 3 april 2010
+    % [cor, lag, epoch, std_error] = root.spk_xcorr(cel, max_lag,t_bin, average_epochs);
+
 
     import CMBHOME.* % has the spk_xcorr function
     import CMBHOME.Utils.*

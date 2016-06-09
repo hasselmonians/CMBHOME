@@ -1,7 +1,4 @@
-function [gridness, phi_v_cor, auto_corr d]  = Gridness2(self, cel, varargin)
-% [gridness, periodicity, auto_corr_rm] = root.Gridness(cel)
-% [gridness, periodicity, auto_corr_rm] = root.Gridness(cel, params)
-%
+function [gridness, phi_v_cor, auto_corr, d]  = Gridness2(self, cel, varargin)
 % Calculates the original gridness score of 'cel'. Continuizes all epochs.
 %
 % ARGUMENTS
@@ -51,8 +48,8 @@ function [gridness, phi_v_cor, auto_corr d]  = Gridness2(self, cel, varargin)
 %       60 or 120 degrees and the maximum trough at either 30, 90 or 150
 %       degrees
 %
-% andrew bogaard 6 may 2010
-
+% [gridness, periodicity, auto_corr_rm] = root.Gridness(cel)
+% [gridness, periodicity, auto_corr_rm] = root.Gridness(cel, params)
 p = inputParser;
 
 p.addRequired('self')

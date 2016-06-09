@@ -1,12 +1,11 @@
 function plot_header(self, cel)
+% Used in Visualize2 primarily.
+%
 % root.plot_header(cel)
 %
 % prints the tetrode and cell number, current event labels, average firing
 % frequency for these epochs.
-%
-% Used in Visualize2 primarily.
-%
-% andrew 3 april 2010
+
 
     % find event strings
     if all(arrayfun(@(a) any(a==self.event{:,2}), self.epoch)) % if both timestamps exist in structin.events

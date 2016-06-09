@@ -1,8 +1,5 @@
 function [S, f] = plot_spk_spectrum(self, cel)
-% root.plot_spk_spectrum(cel);
-%
-% plots the Frequency power spectrum for spiking of cell cel for every
-% root.epoch.
+% plots the Frequency power spectrum for spiking
 %
 % Returns
 % S -> spectrum

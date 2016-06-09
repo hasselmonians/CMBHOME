@@ -1,9 +1,5 @@
 function [cor, lag, smooth, theta_skip_index] = AutoCorr(self, cel, varargin)
-% root.AutoCorr(cel);
-% root.AutoCorr(cel, params);
-%
-% Returns and optionally plots autocorrelation of cel for root.epoch with
-% various parameters below. 
+% Returns and optionally plots spiketime autocorrelation
 %
 % Capable of velocity thresholding, and multiple epoch averaging. If root
 % has multiple epochs and average_epochs is set to 1, then the returned
@@ -40,6 +36,8 @@ function [cor, lag, smooth, theta_skip_index] = AutoCorr(self, cel, varargin)
 % andrew oct 20 2010
 % v 1.1 jan 12 2011.    removed user_kalman_vel param, because now the object
 %                       defaults to the user defined root.b_vel, if it exists
+%
+% [cor, lag, smooth, theta_skip_index] = root.AutoCorr(cel, varargin)
 
 p = inputParser;
 

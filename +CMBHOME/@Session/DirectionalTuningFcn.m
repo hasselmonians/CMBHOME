@@ -1,9 +1,5 @@
 function [tuning_curve, theta, ang_hd, mr] = DirectionalTuningFcn(self, cel, varargin)
-% (1) [tuning_curve, theta] = root.DirectionalTuningFcn(cel);
-% (2) [tuning_curve, theta] = root.DirectionalTuningFcn(cel, 'binsize', degrees, 'Continuize', 1);
-% 
-% Computes the directional (orientational) tuning curve. Also called rate
-% map, 
+% Computes the head direction tuning curve. 
 % 
 % Arguments (see syntax (2)):
 %
@@ -17,6 +13,8 @@ function [tuning_curve, theta, ang_hd, mr] = DirectionalTuningFcn(self, cel, var
 % 'binsize', O is the number of epochs and M is the number of cells
 %
 % theta -> vector of bin centers in degrees
+% (1) [tuning_curve, theta] = root.DirectionalTuningFcn(cel);
+% (2) [tuning_curve, theta] = root.DirectionalTuningFcn(cel, 'binsize', degrees, 'Continuize', 1);
 
 
     import CMBHOME.Utils.*

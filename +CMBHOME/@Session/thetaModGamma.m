@@ -1,8 +1,7 @@
 function [modindex, thetarange, gammarange, powPhsDists, bincenters, partial] = thetaModGamma(self,varargin)
-% function [modindex, thetarange, gammarange, powPhsDists, bincenters] = thetaModGamma(root,filtType,filtParams,shuffles,thetarange,gammarange)
-%
-% Computes the phase modulation of gamma by theta using the method
-% described by Tort et al (2010) J Neurophys.  In short, it computes the
+% Computes the phase modulation of gamma by theta 
+% using the method described by Tort et al (2010) J Neurophys.
+% In short, it computes the
 % entropy in the histogram of powers over phases.
 %
 %
@@ -30,8 +29,9 @@ function [modindex, thetarange, gammarange, powPhsDists, bincenters, partial] = 
 %                the number of gamma frequencies analysed and nPh is the
 %                number of phase bins used.
 %  bincenters - phase bin labels
+%
+% [modindex, thetarange, gammarange, powPhsDists, bincenters] = thetaModGamma(root,filtType,filtParams,shuffles,thetarange,gammarange)
 
-% eln 20120512
 
     p = inputParser;
     p.addParamValue('filtType', []);

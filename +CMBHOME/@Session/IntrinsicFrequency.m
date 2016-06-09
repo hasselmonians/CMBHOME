@@ -1,8 +1,6 @@
 function [f_peak, power_ratio] = IntrinsicFrequency(self, cel, print_to_screen, speed_thresh, varargin)
-% (1) F = root.IntrinsicFrequency(cel);
-% (2) F = root.IntrinsicFrequency(cel, print_to_screen)
-% (3) [F, power_ratio] = root.IntrinsicFrequency(self, cel, print_to_screen, speed_thresh)
-%
+% Intrinsic frequency of a unit
+% 
 % ARGUMENTS
 %
 %   cel                     [tetrode index, cell index] in Session object root
@@ -33,7 +31,10 @@ function [f_peak, power_ratio] = IntrinsicFrequency(self, cel, print_to_screen, 
 % spectral power (calculated as the mean of the square of the signal),
 % then the cell is theta modulated
 %
-% andrew bogaard 12 july 2010
+% (1) F = root.IntrinsicFrequency(cel);
+% (2) F = root.IntrinsicFrequency(cel, print_to_screen)
+% (3) [F, power_ratio] = root.IntrinsicFrequency(self, cel, print_to_screen, speed_thresh)
+
 
 default_speed_thresh = 5; %cm/sec
 

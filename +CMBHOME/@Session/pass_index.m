@@ -1,7 +1,10 @@
 function [ results ] = pass_index( self, varargin )
+% How far through the field? 
+
 if isempty(self.cel)
     self.cel = varargin{1};
     varargin = varargin(2:end);    
+    
 end
 if isempty(self.active_lfp)
     self.active_lfp = self.cel(1);

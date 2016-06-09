@@ -1,7 +1,4 @@
 function [gridness, props]  = Gridness(self, cel, varargin)
-% [gridness, props] = root.Gridness(cel)
-% [gridness, props] = root.Gridness(cel, params)
-%
 % Calculates the original gridness score of 'cel'. Continuizes all epochs.
 %
 % ARGUMENTS
@@ -90,8 +87,8 @@ function [gridness, props]  = Gridness(self, cel, varargin)
 %   syntax: [gridness, phi_v_cor, auto_corr, eccentricity, grid3rotate, grid3factor, r_out, r_in]  = Gridness(self, cel, varargin)
 % v3 jan 10 2011 - created grid property struct to simplify output
 %
-% andrew bogaard 6 may 2010
-
+% [gridness, props] = root.Gridness(cel)
+% [gridness, props] = root.Gridness(cel, params)
 p = inputParser;
 
 p.addRequired('self')

@@ -1,10 +1,10 @@
 function root = AlignSpike2LFP(root)
-% root = root.AppendThetatoSpike;
+% Aligns Spike times to the LFP frames. Populates root.Spike(n,m).i_lfp
 %
 % For every root.b_lfp, aligns root.b_lfp.ts to spike times for all cells
 % in root.spike.ts.
 %
-% andrew 28 sept 2010
+% root = root.AlignSpike2LFP
 
 import CMBHOME.Utils.*
 

@@ -1,5 +1,4 @@
 function plot_raster(self, cel, varargin)
-%
 % Peristimulus time histogram of spikes between times
 %
 % (1) root.plot_raster(cel);

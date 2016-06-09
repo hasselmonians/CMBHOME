@@ -1,6 +1,5 @@
-function [d ax] = gridDistance(self,Pd,ifplot)
+function [d, ax] = gridDistance(self,Pd,ifplot)
 % Calculates and returns the distance from the center Acorr peak to the
-% nearest 6 peaks.
 %
 % Inputs: self -- CMBObject, function assumes self.cel is set
 %         Pd   -- "PeakDistance", the minimum distance between peaks.

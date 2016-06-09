@@ -1,6 +1,4 @@
-% This is a standard data format spike train class for the CMB
-
-% beta 0 andrew abogaard 15 march 2010 
+% This is a standard data format spike times class for the CMB
 
 classdef Spike
     
@@ -15,9 +13,7 @@ classdef Spike
     methods (Static)
                   
         [cor, lag] = CrossCorr(ts1, varargin);
-        
-        %N = SpatialCrossCorr(ts, pos, varargin);
-        
+                
         function [cor, lag] = Spike_XCorr(x, y, max_lag_t, t_bin)
             %   returns the unbiased (see doc) cross correlation for x and y (autocorr if
             %   x==y). bins in width t_bin (seconds) if passed. subtracts the mean, and

@@ -1,6 +1,4 @@
 function information = MyvarInformation(self, cel, varargin)
-% spatial_information = root.SpatialInformation(cel);
-%
 % Computes the information of a cell about the "myvar" parameter
 %
 % Will return the information score in bits/spike for
@@ -17,7 +15,9 @@ function information = MyvarInformation(self, cel, varargin)
 %   std_smooth_kernel   STD of the gaussian kernel to smooth the rate map  
 %   binside             The length bin when calculating the rate map.
 %                       Defaults to 1/20 of the range
-% andrew 14 mat 2010
+%
+% spatial_information = root.SpatialInformation(cel);
+
 
 p = inputParser;
 

@@ -1,6 +1,4 @@
 function signal_filtered = BandpassFilter(signal, Fs, Fpass)
-% signal_filtered = BandpassFilter(signal, Fs, Fpass)
-%
 % Takes 'signal' and bandpasses it to Fpass frequencies
 %
 % Arguments
@@ -8,8 +6,8 @@ function signal_filtered = BandpassFilter(signal, Fs, Fpass)
 % signal - arbitrary signal to be filtered
 % Fs - sample frequency
 % Fpass - 1x2 vector of F_low and F_high indicating passband
-
-% andrew 17 november 2009
+%
+% signal_filtered = BandpassFilter(signal, Fs, Fpass)
 
 if exist('Fpass', 'var')
     if diff(Fpass)<=0

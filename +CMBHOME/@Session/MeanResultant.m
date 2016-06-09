@@ -1,5 +1,5 @@
 function [R, mean_theta, S] = MeanResultant(self, cel)
-% [R, mean_theta, S] = root.MeanResultant(cel); 
+% MRL of head tuning
 %
 % Returns length, angle and circular variance pertaining to the mean
 % resultant of directionality of neuron spiking.
@@ -11,7 +11,7 @@ function [R, mean_theta, S] = MeanResultant(self, cel)
 % see equation 10, DIRECTIONAL STATISTICS. Gary L. Gaile & James E.
 % Burt. 1980
 %
-% andrew 10 june 2010
+% [R, mean_theta, S] = root.MeanResultant(cel); 
 
 [F, theta] = self.DirectionalTuningFcn(cel);
 

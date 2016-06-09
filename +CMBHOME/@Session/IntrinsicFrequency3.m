@@ -1,5 +1,5 @@
 function [f_peak, thetaMod, rVal, acN, fullResults] = IntrinsicFrequency3(self, cel, print_to_screen, speed_thresh, varargin)
-% [f_peak, thetaMod, rVal, fullResults] = IntrinsicFrequency3(self, cel, [print_to_screen], [speed_thresh], [varargin])
+% Intrinsic frequency of a unit
 %
 % ARGUMENTS
 %
@@ -49,8 +49,8 @@ function [f_peak, thetaMod, rVal, acN, fullResults] = IntrinsicFrequency3(self, 
 % (the value at which p<0.05 with df=100), the depth of modulation is
 % computed to be the difference between the amplitude of the first peak and
 % the first trough divided by the amplitude of the first peak.
-
-% eln 110923 adapted from IntrinsicFrequency
+%
+% [f_peak, thetaMod, rVal, fullResults] = IntrinsicFrequency3(self, cel, [print_to_screen], [speed_thresh], [varargin])
 
 default_speed_thresh = 5; %cm/sec
 

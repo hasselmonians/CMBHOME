@@ -1,5 +1,5 @@
 function splot_trajectory(self, cel, varargin)
-% root.plot_trajectory(cel)
+% Plots scaled trajectory
 %
 % Plots animal trajectory for root.epochs (if multiple, they are all
 % plotted on top of one another), along with spikes overlayed in red dots.

@@ -1,29 +1,23 @@
-% This is a standard data format class for in vivo spiking and lfp data at
-% the CMB
-
-% beta 0 andrew 15 march 2010
-% +theta amplitude - eric zilli 3 nov 2010
-%
-% Added thetaAppended, theta_amplitudeAppended, theta_phaseAppended
+% This is a standard data format class for in vivo lfp data at the CMB
 
 classdef LFP
     
     properties
        
-        signal
-        ts
-        fs
-        channel_name
+        signal          % Raw LFP signal 
+        ts              % Timestamps of LFP signals=
+        fs              % Sampling rate
+        channel_name    % Name of the channel
         user_def        % struct for user defined fields
         
     end
     
     properties (Dependent=true, SetAccess=private)
        
-        theta           % vector that either filters signal on the fly, or grabs it from b_theta
-        theta_phase
-        theta_amplitude
-        myvar
+        theta            % LFP signal, filtered to theta range
+        theta_phase      % Hilbert phase of theta filtered signal
+        theta_amplitude  % Hilbert amplitude of theta filtered signal
+        myvar            % Other time varying signal
     end
     
     properties (Hidden)
@@ -130,6 +124,7 @@ end
         end
         
         function self = AppendTheta(self)
+            % Runs filter and populates LFP.theta
             if numel(self)>1
                 for i=1:numel(self)
                     self(i) = self(i).AppendTheta;
@@ -148,7 +143,7 @@ end
         end
         
         function self = AppendThetaPhase(self)
-            
+            % Runs Hilbert transform and populates LFP.ThetaPhase
             if numel(self)>1
                 for i=1:numel(self)
                     self(i) = self(i).AppendThetaPhase;
@@ -165,6 +160,7 @@ end
         end
         
         function self = AppendThetaAmplitude(self)
+            % Runs Hilbert transform and populates LFP.Amplitude
             if numel(self)>1
                 for i=1:numel(self)
                     self(i) = self(i).AppendThetaAmplitude;
@@ -181,20 +177,17 @@ end
         end
         
         function is = thetaAppended(self)
-% 2013-02-05 Jason Climer - jason.r.climer@gmail.com
-% Returns if theta was appended
+            % Returns if theta was appended
             is = ~isempty(self.b_theta);
         end
         
         function is = theta_amplitudeAppended(self)
-% 2013-02-05 Jason Climer - jason.r.climer@gmail.com
-% Returns if theta amplitude was appended
+            % Returns if theta amplitude was appended
             is = ~isempty(self.b_theta_amplitude);
         end
         
         function is = theta_phaseAppended(self)
-% 2013-02-05 Jason Climer - jason.r.climer@gmail.com
-% Returns if theta phase was appended
+            % Returns if theta phase was appended
             is = ~isempty(self.b_theta_phase);
         end
         

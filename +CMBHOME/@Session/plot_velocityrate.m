@@ -1,4 +1,6 @@
 function [R P b] = plot_velocityrate(self, cel, params)
+% Plots firing rate as a function of running speed (pre2016)
+% 
 % root.plot_velocityrate(cel)
 % root.plot_velocityrate(cel, params)
 %
@@ -17,8 +19,8 @@ function [R P b] = plot_velocityrate(self, cel, params)
 % params (optional) -> 0 or 1 element vector indicates whether or not to plot a
 % linear regression with correlation coefficient 
 %
-% andrew 10 june 2010
-
+% [R P b] = plot_velocityrate(self, cel, params)
+ 
 import CMBHOME.Utils.*
 
 R = [];

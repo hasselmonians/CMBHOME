@@ -1,15 +1,14 @@
 function gw = gridWidth(self,cel)
-% gridWidth = root.gridWidth(root.cel)
-%
-% Returns the diameter of the grid field, based on the center peak in the
+% Returns the diameter of the grid field
+% based on the center peak in the
 % spatial autocorrelogram. Width is in PIXELS (divide by 2 to get spatial
 % rather than autocorr spatial)
 %
 % Methods from:
 % Anisotropic encoding of three-dimensional space by place cells and grid
 % cells. Heyman et al 2012. Nature Neuroscience.  
-
-% wchapman 20140404
+% 
+% gridWidth = root.gridWidth(root.cel)
 
     rate_map = self.RateMap(cel, 'continuize_epochs', 1);
     ac = CMBHOME.Utils.moserac(rate_map);

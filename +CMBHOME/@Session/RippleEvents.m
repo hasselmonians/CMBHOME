@@ -1,6 +1,4 @@
 function ripple_events = RippleEvents(self, ind)
-% ripple_events = root.RippleEvents(ind);
-%
 % Detects onset, center, and offset of ripple events that occur in LFP
 % signal. Returns indices in root.b_lfp(ind).signal
 %

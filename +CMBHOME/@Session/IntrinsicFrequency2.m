@@ -1,6 +1,5 @@
 function [f_intrins, theta_index, modelstruct] = IntrinsicFrequency2(self, cel, varargin)
-% (1) [f_intrins, theta_index] = root.IntrinsicFrequency2(cel);
-% (2) [f_intrins, theta_index, modelstruct] = root.IntrinsicFrequency2(cel, params)
+% Intrinsic frequency of a unit
 %
 % ARGUMENTS
 %
@@ -47,6 +46,9 @@ function [f_intrins, theta_index, modelstruct] = IntrinsicFrequency2(self, cel, 
 %                       defaults to the user defined root.b_vel, if it
 %                       exists
 % v 1.2 july 4 2011     updated to measure theta skipping!
+%
+% (1) [f_intrins, theta_index] = root.IntrinsicFrequency2(cel);
+% (2) [f_intrins, theta_index, modelstruct] = root.IntrinsicFrequency2(cel, params)
 
 p = inputParser;
 

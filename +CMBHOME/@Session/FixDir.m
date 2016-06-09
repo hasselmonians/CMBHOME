@@ -1,5 +1,5 @@
 function self = FixDir(self, max_allowed_flips)
-% root = root.FixDir(max_allowed_flips);
+% Corrects errors in headdirection tracking
 %
 % Assumed root.b_headdir is in degrees
 %
@@ -18,8 +18,8 @@ function self = FixDir(self, max_allowed_flips)
 % areas of bad data (either large angular velocities or 450s, NaNs, or
 % zeros) that are 'max_allowed_flips' or less. Then smooth, and bring back
 % to [-180,180).
-
-% andrew 2 nov 2009
+%
+% root = root.FixDir(max_allowed_flips);
 
 if self.raw_headdir~=1
     %disp('It appears the head direction tracking data has already been affected. Reset root.raw_headdir=1 to override.');

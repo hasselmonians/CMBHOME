@@ -1,6 +1,6 @@
 function [epochs, P_r, ts] = ThetaEpochs(self, window, window_inc)
-% [epochs, P_r, ts] = root.lfp.ThetaEpochs(windowsize);
-% 
+% Determines epochs where theta/delta power ratio is above criteria 
+%
 % Returns continuous theta/delta power ratio using instantaneous power from
 % Hilbert transform (P_r). moving window average of each instant. power. vector. 
 % Note that the first windows length worth of data will have edge effects,
@@ -11,7 +11,7 @@ function [epochs, P_r, ts] = ThetaEpochs(self, window, window_inc)
 % stored in 'epochs' [onset, offset;...]. Epochs closer than 50 ms are merged.
 % Epochs less than 10 seconds are removed.
 %
-% andrew 9 nov 2010
+% [epochs, P_r, ts] = root.lfp.ThetaEpochs(windowsize);
 
 thresh = 2;
 

@@ -1,6 +1,5 @@
 function n = selectLocalTetrode(self,cel)
-% Returns the index of the lfp that corresponds to the local LFP of your
-% cell.
+% Returns the index of the lfp that corresponds to the local LFP of your cell.
 
 % wchapman 20130403
 

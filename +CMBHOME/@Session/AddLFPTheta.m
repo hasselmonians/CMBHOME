@@ -1,8 +1,8 @@
 function root = AddLFPTheta(root)
+% Adds filtered LFP signal (and phase, amplitude) to root.b_lfp
+%
 % For all root.b_lfp, adds theta filtered signal and theta phase vectors to
 % speed up further analysis
-%
-% andrew 29 sept 2010
 
 if isempty(root.b_lfp)
     

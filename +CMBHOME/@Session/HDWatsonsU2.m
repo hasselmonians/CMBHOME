@@ -1,8 +1,5 @@
 function watsonsu2 = HDWatsonsU2(self, cel)
-% watsonsu2 = root.HDWatsonsU2(cel)
-%
-% Returns U2 score for cel for all root.epoch. Vector if more than one
-% epoch
+% Returns U2 head tuning score for current cell
 %
 % watsonsu2: Watson's U^2 test for uniformity in circular data. See
 % redish,
@@ -25,6 +22,8 @@ function watsonsu2 = HDWatsonsU2(self, cel)
 % addition to CMBHOME by andrew abogaard 25 mat 2010
  
 % remove any nan-s from x and y
+%
+% watsonsu2 = root.HDWatsonsU2(cel)
 
 import CMBHOME.*
 

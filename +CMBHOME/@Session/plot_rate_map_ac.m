@@ -1,5 +1,5 @@
 function auto_corr_rm = plot_rate_map_ac(self, cel, rate_map, xs, ys)
-% Peristimulus time histogram of spikes between times
+% Plots the autocorrelation of the ratemap
 
     import CMBHOME.Utils.*
         

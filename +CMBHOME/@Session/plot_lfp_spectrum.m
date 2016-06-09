@@ -1,13 +1,7 @@
 function plot_lfp_spectrum(self, TBP, n_tapers, f_range, theta_analysis)
-% root.plot_lfp_spectrogram(lfp_ind, windowsize, windowsin, bandwidth,
-% f_range);
+% Plots a spectrogram in jet colormap for root.b_lfp(lfp_ind). 
 %
-% Plots a spectrogram in jet colormap for root.b_lfp(lfp_ind). Params for
-% the moving FFT analysis above.
-%
-% Uses the Chronux toolbox.
-%
-% andrew bogaard 3 april 2010
+% root.plot_lfp_spectrogram(lfp_ind, windowsize, windowsin, bandwidth, f_range);
 
     import CMBHOME.Utils.*
     

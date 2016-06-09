@@ -1,7 +1,7 @@
 function root = FixTime(root)
-% root = root.FixTime;
-%
 % Aligns the session to start at time 0.
+%
+% root = root.FixTime;
     
     for i = 1:numel(root.spike)
         root.spike(i).ts = root.spike(i).ts - root.b_ts(1);

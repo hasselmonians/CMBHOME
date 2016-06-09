@@ -1,4 +1,5 @@
 function [occupancy, xdim, ydim] = Occupancy(self, xdim, ydim, mergeepochs, dim)
+% Returns occupancy matrix of time spent in 2D spatial bins 
 %
 % Returns occupancy matrix of time spent in bins of dimension 3x3cm^2 be
 % default. occupancy = root.Occupancy(xdim, ydim) where will return a matrix of

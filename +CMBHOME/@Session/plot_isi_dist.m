@@ -1,5 +1,6 @@
 function plot_isi_dist(self, cel)
-
+    % Plots interspike interval histogram on current axis
+    
     ts = self.cel_ts;
     
     if iscell(ts)

@@ -1,10 +1,5 @@
 function plot_trajectory(self, cel, varargin)
-% root.plot_trajectory(cel)
-%
-% Plots animal trajectory for root.epochs (if multiple, they are all
-% plotted on top of one another), along with spikes overlayed in red dots.
-%
-% andrew 3 april 2010
+
 
 p = inputParser;
 

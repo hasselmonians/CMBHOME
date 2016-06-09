@@ -1,14 +1,10 @@
 function R = ThetaSkipping(self, cel, supress_plot)
-%
-% R = root.ThetaSkipping(cel);
-%
-% Calculates the ratio of the difference between 1st and 2nd peaks in
-% autocorrelogram to the max of both peaks is R
+% Calculates the ratio of the difference between 1st and 2nd peaks in autocorrelogram
 %
 % See PAGE 996 in Sachin S. Deshmukh, D. Yoganarasimha, Horatiu Voicu and James J. Knierim
 % J Neurophysiol 104:994-1006, 2010
 %
-% andrew abogaard 10 sept 2010
+% R = root.ThetaSkipping(cel);
 
     import CMBHOME.Utils.*
     

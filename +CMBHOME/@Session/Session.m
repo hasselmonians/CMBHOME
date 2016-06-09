@@ -57,10 +57,8 @@ classdef Session
         
         date_created        % date and time created as a serial date number (see 'doc now')
         notes               % cell array of notes and dates {datestamp, str_note}
-        spike               % object array of class 'Spike'  
-        name                % 1xM cellstr of directory and filename of current object. see name_formatted and Save. 
-                            % If you want to use a relative path, use a cell array of strings like 
-                            % {'dir1', 'dir1', 'filename.mat'}
+        spike               % object array of class 'Spike', contains unit data  
+        name                % 1xM cellstr of directory and filename of current object.
         cell_thresh = [0,0] % threshold of minimum spike rate [minimum spike frequency, check drift]
         fs_video            % sampling rate from video (samples/sec)
         raw_pos=1           % boolean, is this uncorrected position?
@@ -70,8 +68,8 @@ classdef Session
         path_raw_data       % path to original recording data
         spatial_scale=.5    % cm/pixel
          
-        rotate=0            % deg
-        shift=[0 0]         % cm
+        rotate=0            % deg rotation
+        shift=[0 0]         % cm translation
         
         epoch_group         % vector, Nx1, N is number of epochs with integer indicating like-epochs
         user_def            % property that may be whatever user defines, ex. struct of relevant
@@ -109,7 +107,7 @@ classdef Session
         b_vel               % user defined velocity, if undefined, the derivative of b_x and b_y is used
         b_headdir           % head direction
         b_ts                % timestamps
-        b_myvar
+        b_myvar             % other time varying variable
     
     end
     
@@ -124,7 +122,7 @@ classdef Session
         sheaddir            % headdir (degrees,-180:180)
         ind                 % index in root.b_ts
         ts                  % timestamps (seconds)
-        myvar
+        myvar               % Arbitrary time varying variable
         b_epoch_group       % vector, Nx1, N is number of epochs with integer indicating like-epochs
         headdir             % head direction, (degrees, -180:180)
         cells               % Nx2 array of cells which meet specs_cell above,  [tetrode, cell;...]
@@ -133,20 +131,20 @@ classdef Session
         lfp                 % object array of LFP objects of fields ts and signal
         spk                 % struct with fields representing data at spike times of root.cel
         name_formatted      % this is the root.name field formatted for the current platform
-        cel_x
-        cel_sx
-        cel_y
-        cel_sy
-        cel_vel
-        cel_svel
-        cel_ts
-        cel_headdir
-        cel_sheaddir
-        cel_i
-        cel_theta
-        cel_thetaphase
-        cel_myvar
-        cel_myvar2
+        cel_x               % x position at spike times of root.cel
+        cel_sx              % scaled x position at spike times of root.cel
+        cel_y               % y position at spike times of root.cel
+        cel_sy              % y position at spike times of root.cel
+        cel_vel             % velocity at spike times of root.cel
+        cel_svel            % scaled velocity position at spike times of root.cel
+        cel_ts              % timestamps at spike times of root.cel
+        cel_headdir         % headdir position at spike times of root.cel
+        cel_sheaddir        % headdir position at spike times of root.cel
+        cel_i               % indices to root.b_VAR at spike times of root.cel
+        cel_theta           % Theta filtered LFP power at spike times
+        cel_thetaphase      % Thetaphase position at spike times of root.cel
+        cel_myvar           % root.myvar at spike times of root.cel
+        cel_myvar2          % root.myvar2 at spike times of root.cel
                 
     end
     
@@ -272,7 +270,7 @@ classdef Session
             p = inputParser;
 
             p.addParamValue('name',          'default session name', @(x) ischar(x)||iscellstr(x));
-            p.addParamValue('b_x',          [], @(x) any(size(x)<=1)); 
+            p.addParamValue('b_x',          [], @(x) any(size(  x)<=1)); 
             p.addParamValue('b_y',          [], @(x) any(size(x)<=1)); 
             p.addParamValue('b_headdir',        [], @(x) any(size(x)<=1)); 
             p.addParamValue('b_ts',         [], @(x) any(size(x)<=1)); 

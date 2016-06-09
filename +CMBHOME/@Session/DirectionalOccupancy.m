@@ -1,6 +1,5 @@
 function [angle_occupancy, theta] = DirectionalOccupancy(self, binsize, Continuize)
-% O = root.DirectionalOccupancy;
-% [O, theta] = root.DirectionalOccupancy(binsize, Continuize);
+% Computes head direction occupancy
 %
 % Returns O, the directional occupancy of animal in Session root. If
 % root.epoch is one epoch, O is a column vector. If root.epoch is more than
@@ -15,7 +14,8 @@ function [angle_occupancy, theta] = DirectionalOccupancy(self, binsize, Continui
 % O -> time in seconds in each bin
 % theta -> bins in degrees
 %
-% andrew 28 may 2010
+% O = root.DirectionalOccupancy;
+% [O, theta] = root.DirectionalOccupancy(binsize, Continuize);
 
 import CMBHOME.Utils.*
 

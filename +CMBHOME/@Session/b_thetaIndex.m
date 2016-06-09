@@ -1,4 +1,7 @@
 function [ind,peak,cor,lag] = b_thetaIndex(self,cel,varargin)
+% Calculates thetaindex per Ulanovsky
+%
+% [ind,peak,cor,lag] = b_thetaIndex(self,cel,varargin)
 
 %% Constructed from the methods from
 % Grid cells without theta oscillations in the entorhinal cortex of bats

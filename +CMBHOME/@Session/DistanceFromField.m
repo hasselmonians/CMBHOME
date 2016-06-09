@@ -1,8 +1,6 @@
 function [R, dR, field, rm, peaks] = DistanceFromField(self, cel, strict, plot, peaks)
-% [R, dR, field, rate_map, field_centers] = root.DistanceFromField(cel)
-%
-% returns the minimum distance from field centers. corresponds to root.x
-% and root.y. cannot do multiple epochs yet.
+% returns the minimum distance from field centers.
+% corresponds to root.x and root.y. 
 %
 % may program this so dR is derived from the root.vel vector in case the
 % kalman is there. for now, I will convolve with a gaussain of std 2bins to
@@ -23,6 +21,9 @@ function [R, dR, field, rm, peaks] = DistanceFromField(self, cel, strict, plot, 
 %   dR              direction of movement relative to closest field (neg is
 %                   inbound)
 %   field           each field has a unique ID. this is that.
+%
+%
+% [R, dR, field, rate_map, field_centers] = root.DistanceFromField(cel)
 
 if ~exist('strict', 'var'), strict = 1; end
 

@@ -1,5 +1,5 @@
 function [control_f, f] = VisualizeLFP(self)
-    
+    % GUI for visualizing LFP properties
     % load all LFP files into object with waitbar if not already loaded
     
 %     if load_lfp && length(self.b_lfp)~=length(self.path_lfp)

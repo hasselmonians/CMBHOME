@@ -1,6 +1,5 @@
 function [ results ] = infieldness(varargin)
-%infieldness Measurement of the "in-fieldness" - reflects how "in field"
-%an animal is along its trajectory.
+% Reflects how "in field" an animal is along its trajectory.
 %
 % ARGUMENTS
 %   cel             n x 2 vector like [tetrode index, cell index].  If

@@ -1,7 +1,5 @@
 function spatial_information = SpatialInformation(self, cel, varargin)
-% spatial_information = root.SpatialInformation(cel);
-%
-% Computes the spatial information of a cell
+% Computes the spatial information of a cell (bits/spike)
 %
 % Will return the spatial information score in bits/spike for
 % tetrode cel(1), cell cel(2). Can return continuized epochs, or vectorizes 

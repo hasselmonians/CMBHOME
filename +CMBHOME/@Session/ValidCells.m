@@ -1,7 +1,5 @@
 function cells = ValidCells(self)
-
-% returns matrix 'cells', an Nx2 matrix of [Tetrode Number, Cell Number] of
-% viable cells 
+% returns matrix 'cells', an Nx2 matrix of [Tetrode Number, Cell Number] of viable cells 
 
 % if f_min is set, the number of total spikes/total recording time (not given epoch set time) must be >f_min
 % for that cell to be included

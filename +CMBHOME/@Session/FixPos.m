@@ -1,5 +1,5 @@
 function self = FixPos(self, max_allowed_flips)
-% root = root.FixPos;
+% Fixes large jumps in position and interpolates missing values
 %
 % Takes all 0,0s and large jumps in position (greater than
 % jitter_threshold=15 pixels/sample) that persist for less than
@@ -7,8 +7,7 @@ function self = FixPos(self, max_allowed_flips)
 % data. Smooths conservatively afterward, as well (convolution with a gaussian, standard
 % deviation = 2 samples).
 %
-% andrew december 2009
-% update andrew june 15 2011
+% root = root.FixPos;
 
 import CMBHOME.Utils.*
 

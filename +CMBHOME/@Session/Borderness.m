@@ -1,6 +1,4 @@
-function [borderness Cm Dm] = Borderness(self,cel,plotIt)
-% borderness = self.Borderness(cel)
-%
+function [borderness, Cm, Dm] = Borderness(self,cel,plotIt)
 % Calculates the borderness score, as in Solstad 2008
 
 % Bill 2012.10.26
@@ -19,6 +17,8 @@ function [borderness Cm Dm] = Borderness(self,cel,plotIt)
 % If multiple recording sessions for the cell, should discard if spatial
 % correlation < 0.5
 %
+% [borderness, Cm, Dm] = root.Borderness(cel, ifPlot)
+
 %% Setup
 self.cel = cel;
 rm = self.RateMap(self.cel);

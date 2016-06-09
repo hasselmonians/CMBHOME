@@ -1,8 +1,5 @@
 function [f_cell, vel_dim] = VelocityRate(self, cel, vel_dim)
-%[F, V] = root.VelocityRate(cel, vel_dim)
-%
-% Calculates the rate of firing for cell cel ([tetrode index, cell index]), 
-% for bins of running speed.
+% Calculates the rate of firing for cell cel, for bins of running speed.
 %
 % If vel_dim is specified, bin edges of running speed are vel_dim
 % If vel_dim is not specified, bin edges of running speed are [0 max_vel]
@@ -15,7 +12,8 @@ function [f_cell, vel_dim] = VelocityRate(self, cel, vel_dim)
 %
 % root.epoch needs to be 1x2 vector
 %
-% andrew 17 may 2010
+%[F, V] = root.VelocityRate(cel, vel_dim)
+
 self.cel = cel;
 if ~exist('vel_dim', 'var')
     vel_dim = 0:self.spatial_scale^-1:prctile(CMBHOME.Utils.ContinuizeEpochs(self.vel),95);
