@@ -1,4 +1,5 @@
 function k = anglediff(varargin)
+    % Finds angular difference between two vectors
     p = inputParser;
     p.addRequired('A',@isnumeric);
     p.addOptional('B',NaN,@isnumeric);

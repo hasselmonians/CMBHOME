@@ -1,5 +1,5 @@
 function [self, success] = RunningEpochs(self, lower_threshold, upper_threshold, speed_dur)
-
+    % Sets lower and upper thresholds for running speed & sets epochs accordingy
     import CMBHOME.Utils.*
     
     success = 0;

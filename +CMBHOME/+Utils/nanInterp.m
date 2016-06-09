@@ -1,10 +1,6 @@
 function [ X ] = nanInterp( X, method)
-% x_interpolated = CMBHOME.Utils.nanInterp(x)
-%
 % Interpolates all Nan's in the input vector, according to the second input
 % argument "method". Defaults to nearest neighbor interpolation. 
-
-% Bill 2013.01.08
 
 if ~exist('method','var'), method = 'nearest'; end;
 

@@ -1,8 +1,5 @@
 function inds = SpkInds(t, spk)
-
-% this function replaces spike_location, which used to incorrectly align
-% spike times with video stamps and spit out spk_x, spk_y and spk_t. Now,
-% we just have spk_ind, which are indices in structin.x, etc
+% Aligns two different timebases by using indices
 
 count = hist(spk, t);
 

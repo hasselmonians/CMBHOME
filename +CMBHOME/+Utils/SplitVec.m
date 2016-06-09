@@ -1,7 +1,4 @@
 function varargout = SplitVec(v, fun, varargin)
-% [out1, out2, ...] = SplitVec(V, FUN, type1, type2, ...)
-% [out1, out2, ...] = SplitVec(V, COL, type1, type2, ...)
-%
 % Purpose: Partition an input vector V into smaller series of subvectors
 %          of consecutive elements based on split points
 %
@@ -77,7 +74,9 @@ function varargout = SplitVec(v, fun, varargin)
 %   02-Feb-2010: correct bug when 'loc' is required when working
 %                down the columns of matrix (NUMEL(V) -> SIZE(V,1)) 
 %   26-Aug-2011: New builtin outputs: blockID and subsetorder
-
+% 
+% [out1, out2, ...] = SplitVec(V, FUN, type1, type2, ...)
+% [out1, out2, ...] = SplitVec(V, COL, type1, type2, ...)
 isrow = false;
 % Reshape a row vector in column vector
 if isvector(v) && size(v,1)==1

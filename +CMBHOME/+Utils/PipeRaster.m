@@ -1,5 +1,4 @@
 function PipeRaster(cellin, varargin)
-
 % Scatters the time course of a single element on ydim with the pipe '|'
 % character. Existing plot must be 'held'
 

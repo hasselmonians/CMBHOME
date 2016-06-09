@@ -1,6 +1,5 @@
 function r = circ_r(alpha, w, d)
-% r = circ_r(alpha, w, d)
-%   Computes mean resultant vector length for circular data.
+% Computes mean resultant vector length for circular data.
 %
 %   Input:
 %     alpha	sample of angles in radians

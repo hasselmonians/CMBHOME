@@ -1,11 +1,10 @@
 function epoch = FilterEpochs(epoch, mindur, minsep)
-%
-% epoch = CMBHOME.Utils.Filterepoch(epoch, mindur, minsep)
-%
-% For an Nx2 array of epoch values (time or otherwise), merges those closer
+%  For an Nx2 array of epoch values (time or otherwise), merges those closer
 % than 'minsep' and removes those less than 'mindur'
 %
 % andrew 6/29/2011
+% epoch = CMBHOME.Utils.Filterepoch(epoch, mindur, minsep)
+
 
 [~, inds] = sort(epoch(:,1)); % sort ascending
 

@@ -1,8 +1,8 @@
 function epochs = SelectEpochs(epochs, validepochs, partials)
-%
+% Takes epochs that exist within valid epochs,
+
 % CMBHOME.Utils.SelectEpochs(epochs, validepochs)
 %
-% Takes epochs that exist within valid epochs,
 %
 %   INPUTS
 %       epochs - Nx2 array, epochs (time1 time2;...)

@@ -1,6 +1,4 @@
 function A = EllipseDirectFit(XY)
-% coefficients = EllipseDirectFit(XY)
-%
 %  Direct ellipse fit, proposed in article
 %    A. W. Fitzgibbon, M. Pilu, R. B. Fisher
 %     "Direct Least Squares Fitting of Ellipses"
@@ -22,6 +20,8 @@ function A = EllipseDirectFit(XY)
 %  better approximated by a hyperbola.
 %  It is somewhat biased toward smaller ellipses.
 %
+% % coefficients = EllipseDirectFit(XY)
+
 
 centroid = mean(XY);   % the centroid of the data set
 

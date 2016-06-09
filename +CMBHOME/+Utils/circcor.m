@@ -1,7 +1,8 @@
 function [Un, Dn] = circcor( circvar, linearvar )
+% %   CIRCCOR correlates a circular variable with a linear variable 
+%
 % [UN, DN] = circcor( circvar, linearvar )
 %
-%   CIRCCOR correlates a circular variable with a linear variable 
 %   and returns a U-value, which should be compared to the lookup 
 %   table on pg. 231 of 'Statistical analysis of circular data.'
 %   Fisher (1993).

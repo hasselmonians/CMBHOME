@@ -1,12 +1,9 @@
 function epochs = IntersectEpochs2(varargin)
+% Finds the intersection of all sets of epochs.
 % epochs = IntersectEpochs2(epochs1, epochs2, epochs3...)
 %
 % Must pass at least
 %
-% Finds the intersection of all sets of epochs.
-%
-% andrew october 14 2011
-
 import CMBHOME.Utils.*
 
 if length(varargin)<2, error('you must pass at least 2 input arguments of type ''epoch'''); end

@@ -1,9 +1,8 @@
 function [y_m, R, P, b, y_int] = LinearRegression(x, y, ifPlot)
-%  [y_m, R, P, b, y_int] = LinearRegression(x, y)
 % fits x and y to a linear model, and returns the R and P values, along
 % with y_m, model y values
-
-% andrew 26 january 2010
+%
+%  [y_m, R, P, b, y_int] = LinearRegression(x, y)
 
 degree=2; % linear regression
 

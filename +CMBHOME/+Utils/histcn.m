@@ -1,7 +1,7 @@
 function [count, edges, mid, loc] = histcn(X, varargin)
+% Purpose: compute n-dimensional histogram
 % function [count edges mid loc] = histcn(X, edge1, edge2, ..., edgeN)
 %
-% Purpose: compute n-dimensional histogram
 %
 % INPUT
 %   - X: is (M x N) array, represents M data points in R^N

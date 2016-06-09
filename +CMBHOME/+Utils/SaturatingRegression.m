@@ -1,10 +1,8 @@
-function [y_model,fit_params,rsquare,goodness] = LogRegression(x, y)
-% [fit,params,rsquare,goodness] = CMBHOME.Utils.LogRegression(x,y)
-%
+function [y_model,fit_params,rsquare,goodness] = SaturatingRegression(x, y)
 % Does a natural growth fit and returns the model expected values,
 % parameters of best fit, rsquare value, and other goodness object.
-
-% Bill 23rd October 2012
+%
+% [fit,params,rsquare,goodness] = CMBHOME.Utils.LogRegression(x,y)
 
 if length(x)~=length(y)
     error('LogRegression needs x and y with same lengths');
@@ -18,7 +16,7 @@ if length(x)==1
     return;
 end
 
-x = x(:);
+x = x(:);1
 y = y(:);
 
 tf = isnan(x) | isnan(y); % remove NaNs

@@ -1,7 +1,8 @@
 function CC = moserac(X, X2, threshold)
+% Returns 2-d autocorrelation of matrix M with normalization standards as used by Mosers
+%
 % AC = CMBHOME.Utils.moserac(M1, M2, thresh)
 %
-% Returns 2-d autocorrelation of matrix M with normalization standards as used by Mosers
 %
 % ARGUMENTS
 %   M1           N x M matrix, like a ratemap

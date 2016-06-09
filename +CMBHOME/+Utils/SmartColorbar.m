@@ -1,6 +1,4 @@
 function [cbar, clims] = SmartColorbar(clims, cmap_style)
-% CMBHOME.Utils.SmartColorbar(clims, cmap_style)
-%
 % finds the proper value for null data points to be plotted as white in an
 % IMAGESC plot, or similar.
 %

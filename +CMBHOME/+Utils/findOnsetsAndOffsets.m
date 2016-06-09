@@ -1,6 +1,4 @@
 function [OnOffs] = findOnsetsAndOffsets(boolVec)
-% function [OnOffs] = findOnsetsAndOffsets(boolVec)
-%
 % Returns list of aligned start and stops of chunks of 1's in a vector of
 % 1's and 0's.
 %
@@ -11,10 +9,8 @@ function [OnOffs] = findOnsetsAndOffsets(boolVec)
 %  startEnds - Nx2 list of indices of the first and last 1's for the N
 %              contiguous blocks of 1's.
 %
+% % function [OnOffs] = findOnsetsAndOffsets(boolVec)
 
-% created 6/16/11 eln
-% update 7/5/11 arb line 1
-% update 7/6/11 eln line 26
 
 boolVec = boolVec(:)';
 

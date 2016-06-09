@@ -1,7 +1,6 @@
 function varargout = ContinuizeEpochs(varargin)
-% varargout = CMBHOME.Utils.ContinuizeEpochs(varargin);
-%
 % Converts all cell arrays passed through varagin to arrays in varargout
+%
 %
 % If the cell array is Mx1, then that vararg output is a column vector. If
 % the cell array is MxN, then the vararg output is a matrix max(cat(M) x N
@@ -11,6 +10,7 @@ function varargout = ContinuizeEpochs(varargin)
 
 % takes all data from cell arrays in vargin, and continuizes them into
 % vectors in vargout
+% varargout = CMBHOME.Utils.ContinuizeEpochs(varargin);
 
 varargout = cell(length(varargin),1);
 

@@ -1,7 +1,6 @@
 function [fname] = array2path(fnameArray,replaceString)
-% [fname] = array2path(fnameArray)
-%
-% Recombines the strings stored in fnameArray with the system appropriate
+% Recombines the strings stored in fnameArray 
+% with the system appropriate
 % filesep symbol to generate a valid path.
 %
 % INPUT ARGS:
@@ -12,6 +11,7 @@ function [fname] = array2path(fnameArray,replaceString)
 %  fname - a string with the path using the system appropriate file
 %  seperators (\ or /).  The final character is never a file seperator.
 %
+% [fname] = array2path(fnameArray)
 
 % eln 100519
 cv=0;

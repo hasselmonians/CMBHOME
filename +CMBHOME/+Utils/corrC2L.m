@@ -1,6 +1,4 @@
-function [x,phi,a,phi_knot,rho_c,p] = corrC2L(x,phi)
-% [x,phi,slo,inter,rho,p] = utils.corrC2L(x,phi)
-% 
+function [x,phi,a,phi_knot,rho_c,p] = corrC2L(x,phi) 
 % Find the linear correlation between a linear and circular variable as in 
 % R. Kempter 2012, Journal of Neuroscience Methods. 
 %
@@ -13,8 +11,8 @@ function [x,phi,a,phi_knot,rho_c,p] = corrC2L(x,phi)
 %         phi_knot - Best-fit intercept (radians)
 %         rho_c - correlation coefficient
 %         p - Significance value (unreliable for small datasets)
-
-% wchapman 2012.12.05
+%
+% [x,phi,slo,inter,rho,p] = utils.corrC2L(x,phi)
 
 bads = isnan(x) | isnan(phi);
 x(bads) = [];

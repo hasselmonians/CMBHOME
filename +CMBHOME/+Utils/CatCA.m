@@ -1,6 +1,4 @@
-function matout = CatCA(cellin)
-% matout = CMBHOME.Utils.CatCA(cellin)
-%
+function matout = CatCA(cellin)%
 % Converts a cell array of vectors 'cellin' of size MxN to a matrix padded by NaNs of
 % size max_vector x N x M. This is useful for data structures in CMBHOME.
 % If cellin is a matrix, matout = cellin. The reason M (epochs) gets pushed

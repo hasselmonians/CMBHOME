@@ -1,5 +1,5 @@
 function [fnameArray] = path2array(fname,refString)
-% function [fnameArray] = path2array(fname)
+% Splits a path in to cell aray, breaking upon filesep
 % 
 % takes in a string representing the path to a file or folder and breaks it
 % into a cell array in which each cell holds the portions of the filename

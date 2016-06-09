@@ -1,16 +1,12 @@
 function root = MergeEpochs(root)
-%
-% root = CMBHOME.Utils.MergeEpochs(root);
-%
 % Returns root with epochs that do not overlap. Touching epochs are merged.
+%
 %
 % Assumes that all epochs are on the timescale of root.b_ts (all epochs
 % have samples within them. any epochs without samples within them are
 % deleted)
-%
-% v1. andrew
-% v2. ehren
-    
+% root = CMBHOME.Utils.MergeEpochs(root);
+
 if ~strcmp(class(root), 'CMBHOME.Session'), error('MergeEpochs has been updated to require new syntax.'); end
 
 if size(root.epoch,1)<2, return; end

@@ -1,5 +1,4 @@
 function matout = Cell2MatPlus(cellin)
-
 % returns a matrix from cell cellin, where differently sized vectors are
 % padded with NaNs
 

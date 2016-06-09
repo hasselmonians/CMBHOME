@@ -1,6 +1,5 @@
 function x = RemoveJumpsAndSmooth(x, max_allowed_flips, jitter_threshold, smooth_std,filter_def)
-% x = RemoveJumpsAndSmooth(x, max_flip_length, jitter_threshold, smooth_std);
-%
+%  Removes large jumps in data, smoothes the removed regions
 %   ARGUMENTS
 %       x                   a vector of something. NaNs may be used in place of
 %                           known bad samples
@@ -17,7 +16,7 @@ function x = RemoveJumpsAndSmooth(x, max_allowed_flips, jitter_threshold, smooth
 % then linearly interpolate the missed samples and smooth by convolution
 % with a gaussion of standard deviation smooth_std bins.
 %
-% andrew june 15 2011
+% x = RemoveJumpsAndSmooth(x, max_flip_length, jitter_threshold, smooth_std);
 
     import CMBHOME.Utils.*
 

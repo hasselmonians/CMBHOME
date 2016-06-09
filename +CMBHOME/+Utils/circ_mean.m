@@ -1,7 +1,7 @@
 function [mu ul ll] = circ_mean(alpha, w)
+%  Computes the mean direction for circular data.
 %
 % mu = circ_mean(alpha, w)
-%   Computes the mean direction for circular data.
 %
 %   Input:
 %     alpha	sample of angles in radians

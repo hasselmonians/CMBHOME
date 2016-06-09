@@ -1,6 +1,4 @@
 function epochs = IntersectEpochs(root, epochs)
-% epochs = root.IntersectEpochs(epochs)
-%
 % Returns list of epochs that are contained in both epochs lists { epochs1, epochs2 }
 %
 % INPUTS

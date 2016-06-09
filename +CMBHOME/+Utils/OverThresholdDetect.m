@@ -1,10 +1,9 @@
 function [ind,tf] = OverThresholdDetect(A, thresh, min_sep, min_length)
-% ind = ThresholdDetect(A, thresh, min_sep, min_length);
-% [ind, epochs] = ThresholdDetect(A, thresh, min_sep, min_length);
-%
 % Searches for continuous epochs for which A is at least thresh, merges those
 % separated by less than min_sep indices, and returns ind, an Nx2 array of
 % indices for continuous epochs over thresh
+% ind = ThresholdDetect(A, thresh, min_sep, min_length);
+% [ind, epochs] = ThresholdDetect(A, thresh, min_sep, min_length);
 
 A = A(:);
 

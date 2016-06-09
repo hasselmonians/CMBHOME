@@ -1,7 +1,8 @@
 function epochs = MergeEpochs2(epochs, mergetouching)
+% merge epochs of arbirary precision without creating binary vector
+%
 % epochs = CMBHOME.Utils.MergeEpochs2(epochs, mergetouching)
 %
-% merge epochs of arbirary precision without creating binary vector
 %
 % returned sorted
 %

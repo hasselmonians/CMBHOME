@@ -1,5 +1,6 @@
 classdef MyvarHolder
-   
+    % Class for arbitrary time series variables. 
+    
     properties (SetAccess=private, Hidden) 
         p_var       % Backup of the original variable, from the time of making the object
         p_ts        % Backup of the original timestamps, from the time o fmaking the object

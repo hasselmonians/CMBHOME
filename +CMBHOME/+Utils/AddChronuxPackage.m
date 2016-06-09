@@ -1,5 +1,5 @@
 function AddChronuxPackage
-
+% Add the chronux pacage
 if ~isempty(findstr('chronux', path)), return; end % check that it isnt already there
 
 a = what('CMBHOME');

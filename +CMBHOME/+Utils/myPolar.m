@@ -1,5 +1,4 @@
 function hpol = myPolar(theta,rho,maxrho,line_style)
-
 % this is same as polar, but you can set the maximum rho value.
 
 if nargin < 1

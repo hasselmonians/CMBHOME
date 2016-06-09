@@ -1,7 +1,4 @@
 function [phi, max_cor, phi_v_cor] = AutoCorrRotation(ac1, ac2, varargin)
-% [phi] = AutoCorrRotation(ac1, ac2);
-% [phi, max_cor, phi_v_cor] = AutoCorrRotation(ac1, ac2);
-%
 % Calculates angle phi for which ac1 and ac2 are maximally correlated.
 % Useful for checking for rotation of grid field orientation between
 % conditions
@@ -35,7 +32,8 @@ function [phi, max_cor, phi_v_cor] = AutoCorrRotation(ac1, ac2, varargin)
 %   3. Finds max of the correlation score, and returns both vectors, as
 %   well.
 %   
-
+% [phi] = AutoCorrRotation(ac1, ac2);
+% [phi, max_cor, phi_v_cor] = AutoCorrRotation(ac1, ac2);
 import CMBHOME.Utils.*
 
 p = inputParser;
