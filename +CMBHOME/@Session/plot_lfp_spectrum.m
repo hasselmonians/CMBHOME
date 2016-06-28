@@ -19,6 +19,10 @@ function plot_lfp_spectrum(self, TBP, n_tapers, f_range, theta_analysis)
         theta_analysis = 0;
     end
         
+    if ~exist('f_range', 'var')
+        f_range = [0 120];
+    end
+    
     signal = self.lfp.signal;
     
     if iscell(signal), signal = vertcat(signal{:}); end

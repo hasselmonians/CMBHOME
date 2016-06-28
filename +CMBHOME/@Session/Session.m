@@ -1,39 +1,11 @@
 % This is a standard data format class for in vivo spiking, video tracking,
 % and lfp data at the CMB at Boston University. See
-% http://conte.bu.edu/repos/abogaard/+CMBHOME/README_CMBHOME.pdf and
-% TutorialData.zip for a tutorial. 
 %
 % ACCESSING DOCUMENTATION
 %
 %   >> doc CMBHOME.Session; % for documentation on root objects
 %   >> doc CMBHOME.LFP; % for documentation on LFP objects
 %   >> doc CMBHOME.Spike; % for documentation on Spike objects (units)
-%
-% By default epochs work like ts>=epoch(1) & ts<=epoch(2). The hidden field
-% root.ops = {'ge', 'le'} may change this
-%
-% All vectors are Nx1
-%
-% Version History
-%
-% v1 15 april 2010      presented and released
-% v1.1 26 may 2010      changed root.spk_*(tetrode_i, cell_i) to
-%                       root.spk_*(cel) to match convention
-% v1.2 18 june 2010     added epoch_group to indicate epochs which indicate
-%                       the same type of event
-% v1.3 8 july 2010      added notes property
-% v1.4 18 august 2010   added active LFP file property and how we handle
-%                       LFP objects
-% v1.5 11 jan 2011      added spk property, as well as user-defined "cel"
-%                       property, updated behavior of root.vel. (if
-%                       root.b_vel exists, it uses this. if not, simple
-%                       derivative is used). also added the
-%                       root.name_formatted field so that now the objects
-%                       work in a relative naming convention if desired
-% v2   14 oct 2011      greatly improved speed and inter-dependencies
-%                       between properties
-%      25 feb 2013      Added rotate and shift properties, as well as svel, sx, sy, and sheaddir dependent properties. 
-% andrew robert bogaard 2/10-9/11
 
 classdef Session
     
