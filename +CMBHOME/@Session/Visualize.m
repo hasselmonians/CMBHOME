@@ -513,11 +513,11 @@ uicontrol('Style','edit',... % one textbox
     function gridness_Callback(source,eventdata) 
        % Display surf plot of the currently selected data.
        
-        if get(source-1, 'Value') ~= get(source, 'Value')
+        %if get(source-1, 'Value') ~= get(source, 'Value')
 
-           set(source-1, 'Value', get(source, 'Value'));
+        %   set(source-1, 'Value', get(source, 'Value'));
 
-        end
+        %end
         
         if (get(source,'Value') == get(source,'Max'))
            % Checkbox is checked-take approriate action

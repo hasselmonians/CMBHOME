@@ -1,4 +1,4 @@
-function plot_lfp_spectrogram(self, windowsize, windowinc, bandwidth, f_range, clims)
+function [t, f, S, clims] = plot_lfp_spectrogram(self, windowsize, windowinc, bandwidth, f_range, clims)
 % Plots a spectrogram in jet colormap for current LFP
 %
 % Uses the Chronux toolbox.
