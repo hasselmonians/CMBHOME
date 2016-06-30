@@ -119,6 +119,7 @@ classdef Import
                 ExtractHeader = 0;
                 ExtractionMode = 1;
                 [t, x, y, headdir] = Nlx2MatVT(video_file, FieldSelectionArray,ExtractHeader,ExtractionMode);
+                t = t/10^6; %convert from microseconds to seconds
             
             else
                 t=load(video_file);
@@ -133,7 +134,6 @@ classdef Import
             event_ts = event_ts';
 
             % Convert times from microseconds to seconds
-            t = t/10^6;
             event_ts = event_ts/10^6;
 
             event = cell(length(event_ts), 2);
