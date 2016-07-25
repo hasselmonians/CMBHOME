@@ -115,6 +115,7 @@ classdef Session
         cel_i               % indices to root.b_VAR at spike times of root.cel
         cel_theta           % Theta filtered LFP power at spike times
         cel_thetaphase      % Thetaphase position at spike times of root.cel
+        cel_lfpmyvar        % root.b_lfp(active_lfp).b_myvar at spiketimes of root.cel
         cel_myvar           % root.myvar at spike times of root.cel
         cel_myvar2          % root.myvar2 at spike times of root.cel
                 
@@ -1205,6 +1206,24 @@ classdef Session
             end
             
             cel_thetaphase = cellfun(@(c) self.b_lfp(self.active_lfp).theta_phase(c), self.p_cel_lfp_ind, 'unif', 0);
+                
+        end
+        
+        function cel_lfpmyvar = get.cel_lfpmyvar(self)
+           
+            if isempty(self.cel) % if no cel is set, return empty
+                disp('Set root.cel');
+                cel_lfpmyvar = cell(size(self.epoch,1), 1);
+                return
+            end
+            
+            if isempty(self.active_lfp) % if no active lfp set 
+                disp('Set root.active_lfp');
+                cel_theta = cell(size(self.epoch,1), size(self.cel, 1));
+                return                
+            end
+            
+            cel_lfpmyvar = cellfun(@(c) self.b_lfp(self.active_lfp).myvar(c), self.p_cel_lfp_ind, 'unif', 0);
                 
         end
                 
