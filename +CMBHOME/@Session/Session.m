@@ -1355,8 +1355,20 @@ classdef Session
                 end
             end
         end
-       
+        
         function self = AppendKalmanVel(self)
+            if ~isempty(self.b_vel)
+                warning('CMBH:error', 'User defined speed vector already created. Clear root.b_vel first.');
+                
+                return
+            else
+                out = Kropff(self);
+                slef.b_vel = out.v;
+            end
+        end
+                
+       
+        function self = AppendKalmanVel_old(self)
             
             if ~isempty(self.b_vel)
                 

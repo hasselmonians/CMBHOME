@@ -51,7 +51,7 @@ if iscell(self.signal), disp('Only one epoch allowed'); return; end
 
 sig_delta = LFP.DeltaFilter(self.signal, self.fs);
 
-sig_theta = LFP.ThetaFilter(self.signal, self.fs);
+sig_theta = LFP.BandpassFilter(self.signal, self.fs, [4, 12]);
 
 delta_amplitude = LFP.InstAmplitude(sig_delta);
 
