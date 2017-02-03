@@ -1362,8 +1362,11 @@ classdef Session
                 
                 return
             else
-                out = Kropff(self);
-                slef.b_vel = out.v;
+                xvec = CMBHOME.Utils.nanInterp(self.b_x,'spline');
+                yvec = CMBHOME.Utils.nanInterp(self.b_y,'spline');
+
+                out = CMBHOME.Utils.speed_kalman(xvec, yvec, self.fs_video);
+                self.b_vel = out.v;
             end
         end
                 
