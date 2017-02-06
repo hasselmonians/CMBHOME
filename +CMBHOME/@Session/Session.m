@@ -1370,7 +1370,51 @@ classdef Session
             end
         end
                 
-       
+       function self = get_speed(self)
+            if ~isempty(self.b_vel)
+                warning('CMBH:error', 'User defined speed vector already created. Clear root.b_vel first.');
+                return
+            else
+                % added for correction of Kalman time lag (see below),
+                % Holger 01/06/2017
+                raw_speed = self.svel;
+                [t,~,~,vx,vy] = self.KalmanVel(self.b_x,self.b_y,self.b_ts, 2); % quadratic
+                [~, inds] = ismember(t, self.b_ts); % all indices in self.b_ts for which we have a kalman estimate
+                speed = zeros(size(self.b_ts));
+                speed(inds) = sqrt(vx.^2 + vy.^2); % pixels/sec
+                % correct for time lag by applying the same Kalman filter
+                % to the mouse running backwards in time and merging the
+                % two filtered signals (Holger, 01/06/2017)
+                x_rev = flipud(self.x);
+                y_rev = flipud(self.y);
+                [~,~,~,vx_rev,vy_rev] = self.KalmanVel(x_rev,y_rev,self.ts,2);
+                speed_rev = sqrt(vx_rev.^2 + vy_rev.^2);
+                speed_rev = flipud(speed_rev); % Kalman filtered speed of reversed movement
+                % specify lag for crosscorrelation
+                lag = 100; % lag of 100 sampling points (equals 2s)
+                [XCF,~,~] = crosscorr(speed,speed_rev,lag);
+                [~,I] = max(XCF);
+                time_shift = lag + 1 - I;
+                speed_cut = speed; % duplicate speed for cutting edges
+                speed_cut(1:floor(time_shift/2)) = []; % delete first points, because of left shift
+                speed_rev_cut = speed_rev; % duplicate speed_rev for cutting edges
+                speed_rev_cut(end-ceil(time_shift/2)+1:end) = []; % delete last points, because of right shift
+                corrected_speed = zeros(size(raw_speed,1),1); % initialize variable
+                corrected_speed(1:ceil(time_shift/2)) = speed_cut(1:ceil(time_shift/2)); % take first points from left shifted speed signal (, because speed_rev was right-shifted and has no data points there)
+                corrected_speed(end-floor(time_shift/2)+1:end) = speed_rev_cut(floor(time_shift/2)); % take last points from right shifted speed_rev signal (, because speed signal was left-shifted and has no data points there)
+                corrected_speed(floor(time_shift/2)+1:end-ceil(time_shift/2)) = (speed_cut(ceil(time_shift/2)+1:end) + speed_rev_cut(1:end-floor(time_shift/2)))/2; % calculate average from shifted speed and speed_rev signals for middle part of the corrected_speed signal
+                % combine double Kalman-filtered signal with first
+                % derivative of smoothed tracking data
+                smooth_factor = 15; % smooth factor, 1 is 1/fs_video seconds
+                smooth_x = smooth(self.x,smooth_factor); %smooth tracking data
+                smooth_y = smooth(self.y,smooth_factor);
+                smooth_speed = sqrt(diff(smooth_x).^2 + diff(smooth_y).^2)*self.fs_video;
+                combined_speed = sqrt(corrected_speed(2:end).*smooth_speed);
+                self.b_vel = [corrected_speed(1);combined_speed];
+                %warning('CMBH:notify', '%s', 'Added Kalman Velocity to Session Object.');
+            end
+       end
+        
         function self = AppendKalmanVel_old(self)
             
             if ~isempty(self.b_vel)
