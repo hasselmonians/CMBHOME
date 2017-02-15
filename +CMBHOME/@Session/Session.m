@@ -48,6 +48,8 @@ classdef Session
         version = 1.5         % version control
         b_lfp               % object array of structs with fields ts, signal, path_lfp_index ex
         myvar2
+        
+        lfp_manager = struct('theta', 0, 'theta_phase', 0, 'theta_amplitude', 0,'theta_freq', 0);
     end
     
     properties (Access=private, Hidden)
@@ -834,7 +836,114 @@ classdef Session
 
         end
         
-        function lfp = get.lfp(self)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %           Old get.lfp()             %
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+%         function lfp = get.lfp(self)
+%             % check to see if b_lfp is populated. if not, check that there
+%             % is a file by the index at root.active_lfp
+%             
+%             % if there is, load lfp it
+%             
+%             % then call self.lfp.signal and self.lfp.time and get chucks as
+%             % per self.epoch
+%             
+%             if exist('self.b_lfp') % check if it's loaded yet
+%                 if length(self.b_lfp)<self.active_lfp
+%                     
+%                     error('root.active_lfp exceeds length of root.b_lfp');
+%                     
+%                 end
+%             elseif ~isempty(self.active_lfp)
+%                 
+%                 signal = self.b_lfp(self.active_lfp).signal;
+%                 ts = self.b_lfp(self.active_lfp).ts;
+%                               
+%                 b_theta = self.b_lfp(self.active_lfp).b_theta;
+% 
+%                 b_theta_phase = self.b_lfp(self.active_lfp).b_theta_phase;
+% 
+%                 b_theta_amplitude = self.b_lfp(self.active_lfp).b_theta_amplitude;
+%                 
+%                 b_myvar = self.b_lfp(self.active_lfp).b_myvar;
+%                 
+%                 if isempty(b_theta), b_theta = nan(length(signal), 1); end
+%                 
+%                 if isempty(b_theta_phase), b_theta_phase = nan(length(signal), 1); end
+%                 
+%                 if isempty(b_theta_amplitude), b_theta_amplitude = nan(length(signal), 1); end
+%             
+%             else
+%                 
+%                 lfp = [];
+%                 return
+%             
+%             end
+%             %% grab data from epochs
+%             
+%             if size(self.epoch,1)>1
+%                 
+%                 tmp_signal = cell(size(self.epoch,1), 1);
+%                 tmp_ts = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta_phase = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta_amplitude = cell(size(self.epoch,1), 1);
+%             
+%                 for i = 1:size(self.epoch,1)
+%                     
+%                     inds = ts>=self.epoch(i,1) & ts<=self.epoch(i,2);
+%                                         
+%                     tmp_signal{i} = signal(inds);
+%                     tmp_ts{i} = ts(inds);
+%                     tmp_b_theta{i} = b_theta(inds);
+%                     tmp_b_theta_phase{i} = b_theta_phase(inds);
+%                     tmp_b_theta_amplitude{i} = b_theta_amplitude(inds);
+%                     
+%                     if ~isempty(b_myvar)
+%                         tmp_b_myvar{i} = b_myvar(inds,:); %#ok<AGROW>
+%                     end
+%                     
+%                 end
+%                 
+%                 signal = tmp_signal;
+%                 ts = tmp_ts;
+%                 b_theta = tmp_b_theta;
+%                 b_theta_phase = tmp_b_theta_phase;
+%                 b_theta_amplitude = tmp_b_theta_amplitude;
+%                 
+%                 if exist('tmp_b_myvar','var')
+%                     b_myvar = tmp_b_myvar(:);
+%                 end
+%             else
+%                 
+%                 inds = ts>=self.epoch(1) & ts<=self.epoch(2);
+%                 
+%                 signal = signal(inds);
+%                 ts = ts(inds);
+%                 b_theta = b_theta(inds);
+%                 b_theta_phase = b_theta_phase(inds);
+%                 b_theta_amplitude = b_theta_amplitude(inds);
+%                 if ~isempty(b_myvar)
+%                     b_myvar = b_myvar(inds,:);
+%                 else
+%                     b_myvar = [];
+%                 end
+%                 
+%             end
+%             
+%             user_def = self.b_lfp(self.active_lfp).user_def; %#ok<PROP>
+%             
+%             fs = self.b_lfp(self.active_lfp).fs;
+%             
+%             channel_name = self.b_lfp(self.active_lfp).channel_name;
+%             
+%             lfp = CMBHOME.LFP(signal, ts, fs, channel_name, b_theta, b_theta_phase, b_theta_amplitude, user_def, b_myvar); %#ok<PROP>
+%             
+%         end
+
+        %%%%%%%%%% new get.lfp function from Sam Mckenzie %%%%%%%%%%
+         function lfp = get.lfp(self)
             % check to see if b_lfp is populated. if not, check that there
             % is a file by the index at root.active_lfp
             
@@ -850,65 +959,118 @@ classdef Session
                     
                 end
             elseif ~isempty(self.active_lfp)
-                
+              
                 signal = self.b_lfp(self.active_lfp).signal;
                 ts = self.b_lfp(self.active_lfp).ts;
-                              
-                b_theta = self.b_lfp(self.active_lfp).b_theta;
-
-                b_theta_phase = self.b_lfp(self.active_lfp).b_theta_phase;
-
-                b_theta_amplitude = self.b_lfp(self.active_lfp).b_theta_amplitude;
                 
+                if self.lfp_manager.theta==0
+                    b_theta = self.b_lfp(self.active_lfp).b_theta;
+                else
+                    b_theta = self.b_lfp(self.active_lfp).theta;
+                end
+                
+                if self.lfp_manager.theta_phase==0
+                    b_theta_phase = self.b_lfp(self.active_lfp).b_theta_phase;
+                else
+                    b_theta_phase = self.b_lfp(self.active_lfp).theta_phase;
+                end
+                
+                if self.lfp_manager.theta_amplitude==0
+                    b_theta_amplitude = self.b_lfp(self.active_lfp).b_theta_amplitude;
+                else
+                    b_theta_amplitude = self.b_lfp(self.active_lfp).theta_amplitude;
+                end
+                
+%                 if self.lfp_manager.theta_freq==0
+%                     b_theta_freq = self.b_lfp(self.active_lfp).b_theta_freq;
+%                 else
+%                     b_theta_freq = self.b_lfp(self.active_lfp).theta_freq;
+%                 end
+
+% BC 9.13.16: added the below to allow for epoching of myvar
+%%%%%%%%%%
                 b_myvar = self.b_lfp(self.active_lfp).b_myvar;
+%%%%%%%%%%
                 
                 if isempty(b_theta), b_theta = nan(length(signal), 1); end
                 
                 if isempty(b_theta_phase), b_theta_phase = nan(length(signal), 1); end
                 
                 if isempty(b_theta_amplitude), b_theta_amplitude = nan(length(signal), 1); end
-            
-            else
                 
+%                 if isempty(b_theta_freq), b_theta_freq = nan(length(signal), 1); end
+                
+             
+            else
                 lfp = [];
                 return
-            
+                
             end
             %% grab data from epochs
             
             if size(self.epoch,1)>1
                 
-                tmp_signal = cell(size(self.epoch,1), 1);
-                tmp_ts = cell(size(self.epoch,1), 1);
-                tmp_b_theta = cell(size(self.epoch,1), 1);
-                tmp_b_theta_phase = cell(size(self.epoch,1), 1);
-                tmp_b_theta_amplitude = cell(size(self.epoch,1), 1);
-            
-                for i = 1:size(self.epoch,1)
-                    
-                    inds = ts>=self.epoch(i,1) & ts<=self.epoch(i,2);
-                                        
-                    tmp_signal{i} = signal(inds);
-                    tmp_ts{i} = ts(inds);
-                    tmp_b_theta{i} = b_theta(inds);
-                    tmp_b_theta_phase{i} = b_theta_phase(inds);
-                    tmp_b_theta_amplitude{i} = b_theta_amplitude(inds);
-                    
-                    if ~isempty(b_myvar)
-                        tmp_b_myvar{i} = b_myvar(inds,:); %#ok<AGROW>
-                    end
-                    
+%                 tmp_signal = cell(size(self.epoch,1), 1);
+%                 tmp_ts = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta_phase = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta_amplitude = cell(size(self.epoch,1), 1);
+%                 tmp_b_theta_freq = cell(size(self.epoch,1), 1);
+
+                %[status,interval,index] = InIntervals(ts,self.epoch); %ELN
+                [status,interval,index,bounds] = CMBHOME.Utils.InIntervals2(ts,self.epoch);
+                
+                epLengths = cellfun(@length,bounds,'unif',1);
+                bnds = cat(2,bounds{:});
+                signal = mat2cell(signal(bnds),epLengths);
+                ts = mat2cell(ts(bnds),epLengths);
+                b_theta = mat2cell(b_theta(bnds),epLengths);
+                b_theta_phase = mat2cell(b_theta_phase(bnds),epLengths);
+                b_theta_amplitude = mat2cell(b_theta_amplitude(bnds),epLengths);
+                if ~isempty(b_myvar),
+                  b_myvar = mat2cell(b_myvar(bnds,:),epLengths);
                 end
                 
-                signal = tmp_signal;
-                ts = tmp_ts;
-                b_theta = tmp_b_theta;
-                b_theta_phase = tmp_b_theta_phase;
-                b_theta_amplitude = tmp_b_theta_amplitude;
                 
-                if exist('tmp_b_myvar','var')
-                    b_myvar = tmp_b_myvar(:);
-                end
+%                 signal_ep = cell(length(bounds),1);
+%                 ts_ep = cell(length(bounds),1);
+%                 b_theta_ep = cell(length(bounds),1);
+%                 b_theta_phase_ep = cell(length(bounds),1);
+%                 b_theta_amplitude_ep = cell(length(bounds),1);
+%                 b_myvar_ep = cell(length(bounds),1);                 
+%                 for currEpc = 1:length(bounds)
+%                   signal_ep{currEpc} = signal(bounds{currEpc});
+%                   ts_ep{currEpc} = ts(bounds{currEpc});
+%                   b_theta_ep{currEpc} = b_theta(bounds{currEpc});
+%                   b_theta_phase_ep{currEpc} = b_theta_phase(bounds{currEpc});
+%                   b_theta_amplitude_ep{currEpc} = b_theta_amplitude(bounds{currEpc});
+%                   if ~isempty(b_myvar),
+%                     b_myvar_ep{currEpc} = b_myvar(bounds{currEpc},:);
+%                   end
+%                 end
+%                 signal = signal_ep; clear signal_ep;
+%                 ts = ts_ep; clear ts_ep;
+%                 b_theta = b_theta_ep; clear b_theta_ep;
+%                 b_theta_phase = b_theta_phase_ep; clear b_theta_phase_ep;
+%                 b_theta_amplitude = b_theta_amplitude_ep; clear b_theta_amplitude_ep;
+%                 if ~isempty(b_myvar),
+%                    b_myvar = b_myvar_ep; clear b_myvar_ep;
+%                 end
+%  
+%                 n = histc(interval(interval>0),1:size(self.epoch,1));
+%                 signal = mat2cell(signal(status),n);
+%                 ts = mat2cell(ts(status),n);
+%                 
+%                 b_theta = mat2cell(b_theta(status),n);
+%                 b_theta_phase = mat2cell(b_theta_phase(status),n);
+%                 b_theta_amplitude = mat2cell(b_theta_amplitude(status),n);
+%                 %                     b_theta_freq = mat2cell(b_theta_freq(status),n);
+%                 % BC 9.13.16: added the below to allow for epoching of myvar
+%                 if ~isempty(b_myvar)
+%                   b_myvar = mat2cell(b_myvar(status,:),n);
+%                 end
+%                 %
+                  
             else
                 
                 inds = ts>=self.epoch(1) & ts<=self.epoch(2);
@@ -918,23 +1080,26 @@ classdef Session
                 b_theta = b_theta(inds);
                 b_theta_phase = b_theta_phase(inds);
                 b_theta_amplitude = b_theta_amplitude(inds);
+%                 b_theta_freq = b_theta_freq(inds);
+% BC 9.13.16: added the below to allow for epoching of myvar
                 if ~isempty(b_myvar)
-                    b_myvar = b_myvar(inds,:);
+                  b_myvar = b_myvar(inds,:);
                 else
-                    b_myvar = [];
+                  b_myvar = [];
                 end
-                
+%
             end
             
-            user_def = self.b_lfp(self.active_lfp).user_def; %#ok<PROP>
+            user_def = self.b_lfp(self.active_lfp).user_def;
             
             fs = self.b_lfp(self.active_lfp).fs;
             
             channel_name = self.b_lfp(self.active_lfp).channel_name;
             
-            lfp = CMBHOME.LFP(signal, ts, fs, channel_name, b_theta, b_theta_phase, b_theta_amplitude, user_def, b_myvar); %#ok<PROP>
+%            lfp = CMBHOME.LFP(signal, ts, fs, channel_name, b_theta, b_theta_phase, b_theta_amplitude,b_theta_freq); original
+            lfp = CMBHOME.LFP(signal, ts, fs, channel_name, b_theta, b_theta_phase, b_theta_amplitude, user_def, b_myvar); %BC 8.26.16 dropped b_theta_freq bc not implemented in current version of LFP.m
             
-        end
+         end
         
         function b_epoch_group = get.b_epoch_group(self)
         % Checks to see if root.epoch_group is set by user. If it is, and 
@@ -2076,12 +2241,75 @@ classdef Session
     end
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%               Old IsolateEpochs()                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% function [i_ts, i_i] = IsolateEpoch(ts, i, epoch)
+% returns indeces from vector i which correspond to timestamps in ts within
+% epoch start and stop times t_start and t_stop
+% 
+% example: we have indeces i that refer to vector ts of timestamps, give me just the i which
+% lie betweeh t_start and t_stop?
+% 
+% also: i_i are indeces in i for which ts is good (used in theta vector
+% 
+% andrew 18 march 2010
+% 
+% if nargin<3
+%     error('IsolateEpoch: not enough input arguments');
+% end
+% 
+% if max(i)>length(ts)
+%     
+%     warning('CMBH:error', 'Your indeces do not align with the timestamp vector');
+%     return
+%     
+% end
+% 
+% t = ts(i);
+% 
+% if numel(epoch)>2 && numel(t)>1
+%     epoch = mat2cell(epoch, ones(1, size(epoch,1)), 2); 
+% 		
+% 		if a stable sampling frequency can be identified, we can be way fast
+% 		dts = round((unique(diff(t)))*1000); % ms per sample
+%         
+%     if ~any(floor(abs(dts-median(dts)))) && length(dts)>3 % all dts are within 1 ms of the median  
+% 			
+%         fs = round(1000 / median(dts));
+%         endtime= cellfun(@(a) ceil(fs*a(2))>i(end),epoch);
+%         sttime = cellfun(@(a) ceil(fs*a(1))<i(1),epoch);
+%         epoch(endtime)=cellfun(@(a) [a(1) i(end)/fs],epoch(endtime),'uni',0);
+%         epoch(sttime)=cellfun(@(a) [i(1)/fs a(2)],epoch(sttime),'uni',0);
+% 
+%          i_i=cellfun(@(a) [ceil((a(1)-t(1))*fs+1):ceil((a(2)-t(1))*fs)]',epoch,'uni',0); %so now we can generate our own indices
+%       
+%     else
+%             i_i = cellfun(@(a) find(t>=a(1) & t<=a(2)), epoch, 'Unif', 0); %otherwise do the brute force (100x slower)
+%     end
+% 		
+%     tmp_i_i = cell2mat(i_i); tmp_i_i(tmp_i_i==0) = [];
+%     i_ts=i(tmp_i_i); %these steps avoid doing the really slow thing twice
+%     i_ts=  mat2cell(i_ts(:),cellfun(@length,i_i),1);
+% 
+% else
+%     t_start = epoch(1);
+%     t_stop = epoch(2);
+% 
+%     i_ts = i(t>=t_start & t<=t_stop);
+%     
+%     i_i = find(t>=t_start & t<=t_stop);
+% end
+% 
+% end
+
+        %%%%%%%%%% new faster IsolateEpoch function from Sam Mckenzie %%%%%%%%% BC161101 from /dc2 directory's Session.m 
 function [i_ts, i_i] = IsolateEpoch(ts, i, epoch)
 % returns indeces from vector i which correspond to timestamps in ts within
 % epoch start and stop times t_start and t_stop
 %
-% example: we have indeces i that refer to vector ts of timestamps, give me just the i which
-% lie betweeh t_start and t_stop?
+% example: we have indeces i that refer to vector ts of timestamps, return the i which
+% lie betweeh t_start and t_stop
 %
 % also: i_i are indeces in i for which ts is good (used in theta vector
 
@@ -2100,40 +2328,49 @@ end
 
 t = ts(i);
 
-if numel(epoch)>2 && numel(t)>1
-    epoch = mat2cell(epoch, ones(1, size(epoch,1)), 2); 
-		
-		% if a stable sampling frequency can be identified, we can be way fast
-		dts = round((unique(diff(t)))*1000); % ms per sample
-        
-    if ~any(floor(abs(dts-median(dts)))) && length(dts)>3 % all dts are within 1 ms of the median  
-			
-        fs = round(1000 / median(dts));
-        endtime= cellfun(@(a) ceil(fs*a(2))>i(end),epoch);
-        sttime = cellfun(@(a) ceil(fs*a(1))<i(1),epoch);
-        epoch(endtime)=cellfun(@(a) [a(1) i(end)/fs],epoch(endtime),'uni',0);
-        epoch(sttime)=cellfun(@(a) [i(1)/fs a(2)],epoch(sttime),'uni',0);
+if nargin<3
+    error('IsolateEpoch: not enough input arguments');
+end
 
-         i_i=cellfun(@(a) [ceil((a(1)-t(1))*fs+1):ceil((a(2)-t(1))*fs)]',epoch,'uni',0); %so now we can generate our own indices
-      
-    else
-            i_i = cellfun(@(a) find(t>=a(1) & t<=a(2)), epoch, 'Unif', 0); %otherwise do the brute force (100x slower)
-    end
-		
-    tmp_i_i = cell2mat(i_i); tmp_i_i(tmp_i_i==0) = [];
-    i_ts=i(tmp_i_i); %these steps avoid doing the really slow thing twice
-    i_ts=  mat2cell(i_ts(:),cellfun(@length,i_i),1);
-
-else
-    t_start = epoch(1);
-    t_stop = epoch(2);
-
-    i_ts = i(t>=t_start & t<=t_stop);
+if max(i)>length(ts)
     
-    i_i = find(t>=t_start & t<=t_stop);
+    warning('CMBH:error', 'Your indeces do not align with the timestamp vector');
+    return
+    
+end
+
+t = ts(i);
+t = sort(t);
+
+if true % ehren's modified version of Sam's code
+  
+  [~,~,~,bounds] = CMBHOME.Utils.InIntervals2(t,epoch);
+  
+  
+  epLengths = cellfun(@length,bounds,'unif',1);
+  bnds = cat(2,bounds{:});
+  i_ts = mat2cell(i(bnds),epLengths);
+  i_i = cellfun(@transpose,bounds,'uniform',0);
+  
+  if size(epoch,1)==1,
+    i_ts = i_ts{1};
+    i_i  = i_i{1};
+  end
+else % Sam's version of the code (fast but doesn't deal with overlapping epochs)
+  
+  [status,interval,index] = InIntervals(t,epoch);
+  i_i = find(status);
+  n = histc(interval(interval>0),1:size(epoch,1));
+  i_ts = i(i_i);
+  
+  if size(epoch,1)>1
+    i_i = mat2cell(i_i,n);
+    i_ts = mat2cell(i_ts,n);
+  end
 end
 
 end
+
 function self = SetLFPInds(self)
 
     if ~iscell(self.p_ind)
