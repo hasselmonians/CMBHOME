@@ -23,18 +23,15 @@ function ImportGUISaddoris(ifExternal)
     % For help on calling python from matlab, see "'Call User-Defined
     % Python Module" in the matlab 'doc' interface
     
+    p = which('CMBHOME.Session');
+    pyCmd = [p(1:end-27) 'support' filesep 'ReadBehavior.py'];
+    cmd = ['/anaconda/envs/ImageReader/bin/python ' pyCmd ' ' videoFile ' 0'];
+    
     % To call from MATLAB:
     if ifExternal == 0
-        cmd = ['/anaconda/envs/ImageReader/bin/python ReadBehavior.py "' videoFile '" 0'];
         unix(cmd)
-        
     else
-        % Easier and faster to call from Terminal!
-        exec = '/anaconda/envs/ImageReader/bin/python';
-        cmd = ['\n Run this: \n\n' exec ' ReadBehavior.py "' videoFile '" 1' '\n\n'];
-        
-        fprintf(cmd)
-        
+        fprintf([cmd '\n\n'])        
         input('Press any key once Python program complete: ...')
     end
     
