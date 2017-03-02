@@ -25,7 +25,7 @@ function ImportGUISaddoris(ifExternal)
     
     p = which('CMBHOME.Session');
     pyCmd = [p(1:end-27) 'support' filesep 'ReadBehavior.py'];
-    cmd = ['/anaconda/envs/ImageReader/bin/python ' pyCmd ' ' videoFile ' 0'];
+    cmd = ['/anaconda/envs/ImageReader/bin/python ' pyCmd ' ' videoFile ' 1'];
     
     % To call from MATLAB:
     if ifExternal == 0
@@ -38,22 +38,34 @@ function ImportGUISaddoris(ifExternal)
     % After running, import to MATLAB
     posFile = [videoFile(1:end-3) 'csv'];    
     delimiter = ' ';    
-    formatSpec = '%f%f%[^\n\r]';
+    %formatSpec = '%f%f%[^\n\r]';
+    formatSpec = '%f%f%f%f%[^\n\r]';
+
     fileID = fopen(posFile,'r');
     dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'MultipleDelimsAsOne', true, 'EmptyValue' ,NaN, 'ReturnOnError', false);
     fclose(fileID);
     
-    y = dataArray{:, 1};
-    x = dataArray{:, 2};
+    rx = dataArray{2};
+    ry = dataArray{1};
+    bx = dataArray{4};
+    by = dataArray{3};
+    
+    x = nanmean([rx,bx],2);
+    y = nanmean([ry,by],2);
+    
+   
     y = max(y) - y;
 
     vid_ts = (cumsum(ones(size(x)))-1)/30;
     
+    hd = atan2(ry-by, rx-bx);
+    
     %% Initialize the structure with just behavioral variables 
     root = CMBHOME.Session('b_x',x,'b_y',y,...
-                            'b_headdir', zeros(size(x)),... % ... for now
+                            'b_headdir', hd, ...
                             'fs_video', 30,...
-                            'b_ts', vid_ts);
+                            'b_ts', vid_ts,...
+                            'spatial_scale', 0.25);
 
     %% Import the Spikes
     plx = CMBHOME.PLX.readPLXFileC(spikeFile,'all');
@@ -94,7 +106,7 @@ function ImportGUISaddoris(ifExternal)
         fs = adfreq;
         
          % Downsampling
-        decimation_factor = round(fs(1)/1000); % we want to downsample to around 400 Hz
+        decimation_factor = round(fs(1)/400); % we want to downsample to around 400 Hz
         decimation_factor = 2^(nextpow2(decimation_factor)-1); % simplifies our downsampling between time and signal
         fs_new = fs(1)/decimation_factor;
         
@@ -105,11 +117,15 @@ function ImportGUISaddoris(ifExternal)
         LFP(chan) = CMBHOME.LFP(sig,ts,fs_new,[]);
         
     end
-    root.b_lfp = LFP;
+    root.b_lfp = LFP(:);
     
     %% Fix it up
+    
     root = root.FixTime;
     root = root.FixPos;
+    
+    root = root.AlignSpike2LFP;
+    root = root.AlignSpike2Session;
     
     CMBH = [videoFile(1:end-3) 'mat'];
     save(CMBH,'root');

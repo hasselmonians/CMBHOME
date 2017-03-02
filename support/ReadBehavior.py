@@ -46,35 +46,39 @@ def ShowFrame(frame, m, pos):
 
 
 def ProcessFrame(frame, m):
-    dat = frame.astype('double')
-    dat = dat - m
-    
-    
-    r = dat[:,:,0]
-    g = dat[:,:,1]
-    
-    
-    rb = r > 0.8*r.max()
-    gb = g > 0.8*g.max()
-
+    try:
+        dat = frame.astype('double')
+        dat = dat - m
         
-    lbl, nBlob = scipy.ndimage.label(rb, structure = generate_binary_structure(2,2))
-    index=np.unique(lbl)
-    mvar = np.zeros([index.max(),])
-    for i in range(1, index.max()):
-        mvar[i] = r[np.where(lbl==i)].max()
-    correctCluster = mvar.argmax()
-    rpos = scipy.ndimage.measurements.center_of_mass(rb, lbl, correctCluster)
+        
+        r = dat[:,:,0]
+        g = dat[:,:,1]
+        
+        
+        rb = r > 0.8*r.max()
+        gb = g > 0.8*g.max()
     
-    lbl, nBlob = scipy.ndimage.label(gb, structure = generate_binary_structure(2,2))
-    index=np.unique(lbl)
-    mvar = np.zeros([index.max(),])
-    for i in range(1, index.max()):
-        mvar[i] = g[np.where(lbl==i)].max()
-    correctCluster = mvar.argmax()
-    gpos = scipy.ndimage.measurements.center_of_mass(gb, lbl, correctCluster)
-    
-    pos = np.concatenate([rpos, gpos])
+            
+        lbl, nBlob = scipy.ndimage.label(rb, structure = generate_binary_structure(2,2))
+        index=np.unique(lbl)
+        mvar = np.zeros([index.max(),])
+        for i in range(1, index.max()):
+            mvar[i] = r[np.where(lbl==i)].max()
+        correctCluster = mvar.argmax()
+        rpos = scipy.ndimage.measurements.center_of_mass(rb, lbl, correctCluster)
+        
+        lbl, nBlob = scipy.ndimage.label(gb, structure = generate_binary_structure(2,2))
+        index=np.unique(lbl)
+        mvar = np.zeros([index.max(),])
+        for i in range(1, index.max()):
+            mvar[i] = g[np.where(lbl==i)].max()
+        correctCluster = mvar.argmax()
+        gpos = scipy.ndimage.measurements.center_of_mass(gb, lbl, correctCluster)
+        
+        pos = np.concatenate([rpos, gpos])
+    except:
+        pos = np.empty([1,4])
+        pos[:] = np.nan
     return pos
 
 def ReadIt(fileName):
@@ -86,7 +90,7 @@ def ReadIt(fileName):
  
     for frame in range(nFrames):
         pos[frame,:] = ProcessFrame(v[frame], m)
-        ShowFrame(v[frame], m, pos[frame,:])
+        #ShowFrame(v[frame], m, pos[frame,:])
         if np.mod(frame,np.floor(nFrames/100))==0:
             print(100*frame/nFrames)
 
@@ -98,8 +102,8 @@ def ReadItPar(fileName):
     t1 = time.time()
     v = pims.Video(fileName)
     m = GetMean(v)
-    nFrames = v.get_metadata()['nframes']
     num_cores = multiprocessing.cpu_count()
+    
 
     results = Parallel(n_jobs=num_cores)(delayed(ProcessFrame)(frame, m) for frame in v[:])
 
