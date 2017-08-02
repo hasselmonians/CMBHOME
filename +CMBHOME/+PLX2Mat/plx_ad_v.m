@@ -28,6 +28,8 @@ ts = -1;
 fn = -1;
 ad = -1;
 
+import CMBHOME.PLX2Mat.*
+
 if nargin ~= 2
     error 'Expected 2 input arguments';
 end

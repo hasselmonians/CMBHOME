@@ -9,7 +9,7 @@ function [diffData2] = circDiff(data,dim,type)
 %  type - 'deg' or 'rad' to specify if 2pi or 360 is max value
 
 data = data - min(data(:));
-
+import CMBHOME.Axona.*
 if ~exist('type','var')
 	if abs(360-max(data(:))) > abs(2*pi-max(data(:)))
 		% data are probably in radians

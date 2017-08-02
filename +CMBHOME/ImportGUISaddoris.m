@@ -1,4 +1,4 @@
-function ImportGUISaddoris(ifExternal)
+ function ImportGUISaddoris(ifExternal)
 
     if ~exist('ifExternal','var')
         ifExternal = 1;
@@ -25,7 +25,7 @@ function ImportGUISaddoris(ifExternal)
     
     p = which('CMBHOME.Session');
     pyCmd = [p(1:end-27) 'support' filesep 'ReadBehavior.py'];
-    cmd = ['/anaconda/envs/ImageReader/bin/python ' pyCmd ' ' videoFile ' 1'];
+    cmd = ['/anaconda/envs/ImageReader/bin/python ' pyCmd ' "' videoFile '" 1'];
     
     % To call from MATLAB:
     if ifExternal == 0
