@@ -62,8 +62,11 @@ warning('off', 'MATLAB:interp1:NaNinY');
     x = ndnanfilter(x, normpdf(-6:6, 0, 2)', [], 1, {}, {}, 1); % conv with gaussian and ignore NaNs
     y = ndnanfilter(y, normpdf(-3:3, 0, 2)', [], 1, {}, {}, 1);
     
-    self.raw_pos = self.raw_pos-1;
+    self.raw_pos = 0 ;
     self.b_x = x;
     self.b_y = y;
 
+    self.b_x = self.b_x - min(self.b_x);
+    self.b_y = self.b_y - min(self.b_y);
+    
 end
