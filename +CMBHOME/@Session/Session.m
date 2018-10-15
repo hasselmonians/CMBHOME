@@ -39,7 +39,6 @@ classdef Session
         path_lfp            % cell array of fnames to lfp recording data
         path_raw_data       % path to original recording data
         spatial_scale=.5    % cm/pixel
-        isHolgerTall=true
 
         rotate=0            % deg rotation
         shift=[0 0]         % cm translation
