@@ -22,6 +22,10 @@ function self = Shuffle(self, varargin)
     % NOTE: Time must start at 0
     % root2 = root.Shuffle();
 
+    if self.b_ts(1) ~= 0
+        error('Run root.FixTime first');
+    end
+    
     p = inputParser;
     p.addParamValue('n', 1,  @(x) numel(x)==1);
     p.addParamValue('range', [0.003 self.b_ts(end)-0.003], @(x) numel(x)==2)
@@ -39,4 +43,5 @@ function self = Shuffle(self, varargin)
     self.spike = Spk;
     self = self.AlignSpike2Session;
     
+    self.cel = [1 1];
 end
