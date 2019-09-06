@@ -100,7 +100,7 @@ else
     end
 end
 
-u2 =  CMBHOME.Spike.WatsonsU2(var,varc);
+u2 =  CMBHOME.Spike.WatsonsU2(var,var(root.cel_i{1}));
 
 %% ifPlot
 if size(tuning_curve,2) > 1, ifPlot=0;end %don't allow user to plot if more than one epoch/cell
