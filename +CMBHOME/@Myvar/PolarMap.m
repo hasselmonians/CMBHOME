@@ -116,7 +116,7 @@ if ifPlot
    theta = [theta(:);theta(1)];
    axes(axis)
    
-   polar(theta,tc)
+   polarplot(theta,tc,'Color','k','LineWidth',1.5)
    hold on
    polarplot(repmat(ang_hd,2,1),[0 mr.*max(tc)],'b','LineWidth',1.5)
    pax = gca;
