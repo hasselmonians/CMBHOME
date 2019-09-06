@@ -108,7 +108,7 @@ if size(tuning_curve,2) > 1, ifPlot=0;end %don't allow user to plot if more than
 if ifPlot
     
    if isempty(axis)
-       figure
+       figure(1)
        axis = gca;
    end
 
@@ -118,7 +118,20 @@ if ifPlot
    
    polar(theta,tc)
    hold on
-   plot([0 cos(ang_hd)*max(tc)],[0 sin(ang_hd)*max(tc)],'r','LineWidth',3)
+   polarplot(repmat(ang_hd,2,1),[0 mr.*max(tc)],'b','LineWidth',1.5)
+   pax = gca;
+   pax.RLim = [0 max(tc)*1.5]
+%    pax.Visible = 'off'
+   thetaticks([0 90 180  270]);
+   rticks([0 max(tc)*1.5])
+   pax.ThetaTickLabel = []
+   
+   pax.ThetaColorMode = 'manual';
+   pax.GridColor = [.25 .25 .25];
+   pax.GridAlpha = 1;
+   
+
+%    plot([0 cos(ang_hd)*max(tc)],[0 sin(ang_hd)*max(tc)],'r','LineWidth',1)
    
    
    
