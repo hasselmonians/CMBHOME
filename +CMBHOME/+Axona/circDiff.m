@@ -35,6 +35,6 @@ diffData = diff(data,[],dim);
 dataDims = ndims(diffData);
 diffData = cat(dataDims+1,diffData, diffData+cycle, diffData-cycle); 
 
-diffData2 = minMag(diffData,dataDims+1);
+diffData2 = CMBHOME.Axona.minMag(diffData,dataDims+1);
 
 

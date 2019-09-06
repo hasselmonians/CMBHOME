@@ -42,7 +42,7 @@ end
 
     thetaout(~isnan(thetaout)) = [thetain(find(~isnan(thetain),1,'first')); cumsum(delta_theta) + thetain(find(~isnan(thetain),1,'first'))]; % continuized data
 
-    thetaout = CMBHOME.Utils.RemoveJumpsAndSmooth(thetaout, 5, .5*pi);
+    thetaout = CMBHOME.Utils.RemoveJumpsAndSmooth(thetaout, 5, .25*pi);
 
     thetaout=atan2(sin(thetaout),cos(thetaout)); % bring back to radians bound by [-pi, pi)
 

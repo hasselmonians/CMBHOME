@@ -25,7 +25,7 @@ warning('off', 'MATLAB:interp1:NaNinY');
     
     ts = self.b_ts;
     
-    bads = (x==0 | y==0);
+    bads = (x<=50| y<=50);
     
     x(bads) = NaN;
     y(bads) = NaN;
