@@ -63,6 +63,10 @@ warning('off', 'MATLAB:interp1:NaNinY');
     y = ndnanfilter(y, normpdf(-3:3, 0, 2)', [], 1, {}, {}, 1);
     
     self.raw_pos = self.raw_pos-1;
+    
+    x = x-nanmin(x);
+    y = y-nanmin(y);
+    
     self.b_x = x;
     self.b_y = y;
 
