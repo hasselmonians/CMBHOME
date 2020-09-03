@@ -32,11 +32,12 @@ end
     
     bads = (thetain==0 | thetain==450);
     thetain(bads) = NaN;
-
     % circular derivative
     if max(thetain) > 2.1*pi
         thetain=pi*thetain./180; thetaout = thetain; % convert thetain to radians
     end
+    thetaout = thetain;
+
     
     delta_theta=diff(thetain(~isnan(thetain))); % take difference in discontinuous angles in radius
 
