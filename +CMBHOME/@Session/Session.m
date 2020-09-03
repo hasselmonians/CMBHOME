@@ -1230,31 +1230,13 @@ classdef Session
         end
         
         function cel_ts = get.cel_ts(self)
-            %if isempty(self.p_cel_ind)
-            %    disp('Set root.cel.'); 
-            %    cel_ts = cell(size(self.epoch,1), 1);
-            %    return
-            %end
-            
-            if isempty(self.cel)
-                disp('set root.cel.')
-                cel_ts = cell(size(self.epoch,1),1);
+            if isempty(self.p_cel_ind)
+                disp('Set root.cel.'); 
+                cel_ts = cell(size(self.epoch,1), 1);
                 return
             end
             
-            cel_ts = cell(size(self.epoch,1),size(self.cel,1));
-            
-            for i = 1:size(self.cel,1)
-                cel = self.cel(i,:);
-                spks_ts = self.spike(cel(1), cel(2)).ts;
-                
-                for k = 1:size(self.epoch,1)
-                    curInds = spks_ts >= self.epoch(k,1) & spks_ts <= self.epoch(k,2);
-                    cel_ts{k,i} = spks_ts(curInds);
-                end
-                %cel = self.cel(i,:);
-                %cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
-            end  
+            cel_ts = cellfun(@(c) self.b_ts(c), self.p_cel_ind, 'unif', 0);
         end
 
         function cel_headdir = get.cel_headdir(self)
