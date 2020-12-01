@@ -126,7 +126,7 @@ classdef Session
         
         [t,x,y,vx,vy,ax,ay] = KalmanVel(posx,posy,post,order,Q,R);
         
-        function root = MergeSessions(cellarray_filename) %#ok<INUSD>
+        function root = MergeSessions(cellarray_filenames) %#ok<INUSD>
         % (1) root = CMBHOME.Session.MergeSessions
         % (2) root = CMBHOME.Session.MergeSessions(cellarray_filenames)
         %
@@ -231,6 +231,7 @@ classdef Session
         root = Session('b_x',x,'b_y',y,'b_headdir',hd,'b_ts',ts,...
                        'fs_video',fs, 'spatial_scale',ss,...
                         'b_lfp',lfp2, 'spike', spike);
+        root.user_def = offset;
         
         end
     end
