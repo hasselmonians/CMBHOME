@@ -9,7 +9,9 @@ end
 % and deletes the rest of the cells information other than label
 
 for j = 1:numel(root.spike)
-    if ~isempty(root.spike(j).ts) || force
+    if isempty(root.spike(j).ts)
+        % pass
+    elseif isempty(root.spike(j).i) || force
         root.spike(j) = CMBHOME.Spike('ts', root.spike(j).ts,...
                                 'vid_ts', root.b_ts,...
                                 'tet_name', root.spike(j).tet_name ,...
