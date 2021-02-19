@@ -63,7 +63,7 @@ if nargin < 5; f0=[]; end;
 params.tapers=dpsschk(tapers,N,Fs); % calculate the tapers
 [Fval,A,f,sig] = ftestc(data,params,p,plt);
 if isempty(f0);
-   fmax=findpeaks(Fval,sig);
+   fmax=findpeaks_chronux(Fval,sig);
    freqs=cell(1,C);
    Amps=cell(1,C);
    datafit=data;
