@@ -16,7 +16,9 @@ function self = ShiftTrain(self, delta)
     dur = self.b_ts(end) - self.b_ts(1);
     
     for i = 1:size(self.cells,1)
-        t = mod(self.spike(self.cells(i,1)).ts + delta, self.b_ts(self.cells(i,2)), dur);
+        ii = self.cells(i,1);
+        jj = self.cells(i,2);
+        t = mod(self.spike(ii,jj).ts + delta, dur);
         spk(self.cells(i,1), self.cells(i,2)) = CMBHOME.Spike('ts',t, 'vid_ts', self.b_ts);
     end
        
