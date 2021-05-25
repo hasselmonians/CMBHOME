@@ -13,13 +13,18 @@ function self = ShiftTrain(self, delta)
     % output:
     %   self: The modified object with shuffled spike times.
     
+    if self.b_ts(1) ~= 0
+        error('Run root.FixTime first');
+    end
+    
+    
     dur = self.b_ts(end) - self.b_ts(1);
     
     for i = 1:size(self.cells,1)
         ii = self.cells(i,1);
         jj = self.cells(i,2);
         t = mod(self.spike(ii,jj).ts + delta, dur);
-        spk(self.cells(i,1), self.cells(i,2)) = CMBHOME.Spike('ts',t, 'vid_ts', self.b_ts);
+        spk(ii,jj) = CMBHOME.Spike('ts',t, 'vid_ts', self.b_ts);
     end
        
     self.spike = spk;

@@ -1,5 +1,5 @@
 function self = Shuffle(self, varargin)
-    % Shuffles spike times of current cell by random amount.
+    % Shuffles spike times ALL cells by random amount.
     % 
     % input:
     %   self: The original object, with self.cel set the cell desired to be
@@ -25,23 +25,25 @@ function self = Shuffle(self, varargin)
     if self.b_ts(1) ~= 0
         error('Run root.FixTime first');
     end
-    
+    dur = self.b_ts(end) - self.b_ts(1);
     p = inputParser;
-    p.addParamValue('n', 1,  @(x) numel(x)==1);
     p.addParamValue('range', [0.003 self.b_ts(end)-0.003], @(x) numel(x)==2)
 
     p.parse(varargin{:})
-    n = p.Results.n;
     range = p.Results.range;
     
-    for i = 1:n
-        delta = range(1) + (range(2)-range(1))*rand(length(self.cel_x{1}),1);
-        ts = mod(self.spike(self.cel(1), self.cel(2)).ts + delta, self.b_ts(end));
-        Spk(1,i) = CMBHOME.Spike('ts',ts, 'vid_ts', self.b_ts);
+    for i = 1:size(self.cells,1)
+        ii = self.cells(i,1);
+        jj = self.cells(i,2);
+        delta = range(1) + (range(2)-range(1))*rand(length(self.spike(ii,jj).ts),1);
+        t = mod(self.spike(ii,jj).ts + delta, dur);
+        spk(ii,jj) = CMBHOME.Spike('ts',t, 'vid_ts', self.b_ts);
     end
     
-    self.spike = Spk;
+    self.spike = spk;
     self = self.AlignSpike2Session;
     
+    old = self.cel;
     self.cel = [1 1];
+    self.cel = old;
 end
