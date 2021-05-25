@@ -1,5 +1,5 @@
 function self = ShiftTrain(self, delta)
-    % Circularly shifts the spike train by a given amount
+    % Circularly shifts ALL spike trains by a given amount
     % 
     % input:
     %   self: The original object, with self.cel set the cell desired to be
@@ -13,24 +13,18 @@ function self = ShiftTrain(self, delta)
     % output:
     %   self: The modified object with shuffled spike times.
     
-    keyboard
     dur = self.b_ts(end) - self.b_ts(1);
     
-    for i = 1:numel(self.spike)
-        if ~isempty(self.spike(i).ts)
-            t = mod(self.spike(i).ts + delta, self.b_ts(end));
-            
-        end
+    for i = 1:size(self.cells,1)
+        t = mod(self.spike(self.cells(i,1)).ts + delta, self.b_ts(self.cells(i,2)));
+        spk(self.cells(i,1), self.cells(i,2)) = CMBHOME.Spike('ts',t, 'vid_ts', self.b_ts);
     end
-    
-    for i = 1:n
-        delta = range(1) + (range(2)-range(1))*rand(length(self.cel_x{1}),1);
-        ts = mod(self.spike(self.cel(1), self.cel(2)).ts + delta, self.b_ts(end));
-        Spk(1,i) = CMBHOME.Spike('ts',ts, 'vid_ts', self.b_ts);
-    end
-    
-    self.spike = Spk;
+       
+    self.spike = spk;
     self = self.AlignSpike2Session;
     
+    old = self.cel;
     self.cel = [1 1];
+    self.cel = old;
+    
 end
