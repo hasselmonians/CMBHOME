@@ -76,7 +76,7 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
         
     
     if (~exist('clims', 'var') || isempty(clims))
-        clims = [0 max(rate_map(:))];
+        clims = [0 max(rate_map(:))+.0001];
     end
     
     if ~suppress_plot && mergeepochs==1
@@ -101,8 +101,8 @@ function [rate_map, xs, ys, xdim, ydim, no_occupancy] = plot_rate_map(self, cel,
         set(gca, 'DrawMode', 'fast');
         set(t,'AlphaData', no_occupancy);
 
-        set(gca,'XTickLabel',cellfun(@(x) str2num(x), get(gca,'XTickLabel'))*(self.spatial_scale))
-        set(gca,'YTickLabel',cellfun(@(x) str2num(x), get(gca,'YTickLabel'))*(self.spatial_scale))
+%         set(gca,'XTickLabel',cellfun(@(x) str2num(x), get(gca,'XTickLabel'))*(self.spatial_scale))
+%         set(gca,'YTickLabel',cellfun(@(x) str2num(x), get(gca,'YTickLabel'))*(self.spatial_scale))
         
     elseif ~suppress_plot && mergeepochs == 0
         for i = 1:size(occupancy,3)
