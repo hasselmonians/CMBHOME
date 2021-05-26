@@ -63,7 +63,7 @@ datan=data-datafit;
 %params.tapers=dpsschk(tapers,N,Fs); % calculate the tapers
 
 % [Fval,A,f,sig] = ftestc(data,params,p,'n');
-% fmax=findpeaks(Fval,sig);
+% fmax=findpeaks_chronux(Fval,sig);
 % datasine=data;
 % for ch=1:C;
 %     fsig=f(fmax(ch).loc);

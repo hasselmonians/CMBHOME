@@ -126,7 +126,7 @@ classdef Session
         
         [t,x,y,vx,vy,ax,ay] = KalmanVel(posx,posy,post,order,Q,R);
         
-        function root = MergeSessions(cellarray_filename) %#ok<INUSD>
+        function root = MergeSessions(cellarray_filenames, varName) %#ok<INUSD>
         % (1) root = CMBHOME.Session.MergeSessions
         % (2) root = CMBHOME.Session.MergeSessions(cellarray_filenames)
         %
@@ -165,21 +165,24 @@ classdef Session
         else
             fopen = cellarray_filenames;
         end
+        if ~exist('varName','var')
+            varName = 'root';
+        end
         
         clear x, clear y, clear ts, clear hd, clear vel
         clear spike, clear even, clear event, clear lfp
         for i = 1:length(fopen)
             tmp = load(fopen{i});
-            x{i}=tmp.root.b_x;
-            y{i}=tmp.root.b_y;
-            ts{i}=tmp.root.b_ts;
-            hd{i}=tmp.root.b_headdir;
-            vel{i}=tmp.root.vel;
-            spike{i}=tmp.root.spike;
-            event{i}=tmp.root.event;
-            lfp{i}=tmp.root.b_lfp;
-            fs = tmp.root.fs_video;
-            ss = tmp.root.spatial_scale;           
+            x{i}=tmp.(varName).b_x;
+            y{i}=tmp.(varName).b_y;
+            ts{i}=tmp.(varName).b_ts;
+            hd{i}=tmp.(varName).b_headdir;
+            vel{i}=tmp.(varName).vel;
+            spike{i}=tmp.(varName).spike;
+            event{i}=tmp.(varName).event;
+            lfp{i}=tmp.(varName).b_lfp;
+            fs = tmp.(varName).fs_video;
+            ss = tmp.(varName).spatial_scale;           
         end
         
         x=CMBHOME.Utils.ContinuizeEpochs(x(:)); y=CMBHOME.Utils.ContinuizeEpochs(y(:));
@@ -190,7 +193,7 @@ classdef Session
         firsts = cellfun(@(x) x(1), ts);
         ts=cellfun(@(x) x-x(1), ts,'UniformOutput',0);
         ends = cellfun(@(x) x(end), ts);
-        offset = [0 ends(1:end-1)+ts{1}(1)];
+        offset = [0 ends(1:end-1)+ts{1}(2)];
         offset = cumsum(offset);
         ts=arrayfun(@(x,y) x{1}+y, ts,offset,'UniformOutput',0);
         ts=CMBHOME.Utils.ContinuizeEpochs(ts(:));
@@ -231,6 +234,7 @@ classdef Session
         root = Session('b_x',x,'b_y',y,'b_headdir',hd,'b_ts',ts,...
                        'fs_video',fs, 'spatial_scale',ss,...
                         'b_lfp',lfp2, 'spike', spike);
+        root.user_def = offset;
         
         end
     end
@@ -1230,31 +1234,13 @@ classdef Session
         end
         
         function cel_ts = get.cel_ts(self)
-            %if isempty(self.p_cel_ind)
-            %    disp('Set root.cel.'); 
-            %    cel_ts = cell(size(self.epoch,1), 1);
-            %    return
-            %end
-            
-            if isempty(self.cel)
-                disp('set root.cel.')
-                cel_ts = cell(size(self.epoch,1),1);
+            if isempty(self.p_cel_ind)
+                disp('Set root.cel.'); 
+                cel_ts = cell(size(self.epoch,1), 1);
                 return
             end
             
-            cel_ts = cell(size(self.epoch,1),size(self.cel,1));
-            
-            for i = 1:size(self.cel,1)
-                cel = self.cel(i,:);
-                spks_ts = self.spike(cel(1), cel(2)).ts;
-                
-                for k = 1:size(self.epoch,1)
-                    curInds = spks_ts >= self.epoch(k,1) & spks_ts <= self.epoch(k,2);
-                    cel_ts{k,i} = spks_ts(curInds);
-                end
-                %cel = self.cel(i,:);
-                %cel_ts(:,i) = cellfun(@(c) self.spike(cel(1), cel(2)).ts(c), self.p_cel_spkind(:,i), 'unif', 0); %#ok<AGROW>
-            end  
+            cel_ts = cellfun(@(c) self.b_ts(c), self.p_cel_ind, 'unif', 0);
         end
 
         function cel_headdir = get.cel_headdir(self)

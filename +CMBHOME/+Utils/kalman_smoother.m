@@ -14,7 +14,7 @@ model = ones(1,T);
 u = [];
 B = [];
 
-args = varargin;
+args = varargin;    
 nargs = length(args);
 for i=1:2:nargs
   switch args{i}

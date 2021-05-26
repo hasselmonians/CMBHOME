@@ -32,10 +32,13 @@ end
     
     bads = (thetain==0 | thetain==450);
     thetain(bads) = NaN;
-
     % circular derivative
-    thetain=pi*thetain./180; thetaout = thetain; % convert thetain to radians
+    if max(thetain) > 2.1*pi
+        thetain=pi*thetain./180; thetaout = thetain; % convert thetain to radians
+    end
+    thetaout = thetain;
 
+    
     delta_theta=diff(thetain(~isnan(thetain))); % take difference in discontinuous angles in radius
 
     delta_theta=atan2(sin(delta_theta), cos(delta_theta)); % derivative of circular data
@@ -46,7 +49,7 @@ end
 
     thetaout=atan2(sin(thetaout),cos(thetaout)); % bring back to radians bound by [-pi, pi)
 
-    thetaout=(thetaout*180)./pi;
+    %thetaout=(thetaout*180)./pi;
 
     self.b_headdir = thetaout;
     self.raw_headdir =  self.raw_headdir-1;
