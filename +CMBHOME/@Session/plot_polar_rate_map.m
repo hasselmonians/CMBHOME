@@ -11,7 +11,7 @@ if ~exist('params', 'var'), params = [1 1]; end
 
     import CMBHOME.Utils.*
 
-    binsize=12; %binsize in degrees
+    binsize=24; %binsize in degrees
        
     [ratemap, theta] = self.DirectionalTuningFcn(cel, 'binsize', binsize, 'Continuize', 1);
     

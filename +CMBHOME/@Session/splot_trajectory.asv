@@ -31,11 +31,7 @@ y = Cell2MatPlus(self.sy);
  
 line(x, y, 'Color', [0.5 0.5 0.5]), hold on;
 
-if dotcol ==0
-  scatter(spk_x, spk_y, 30, spk_hd, 'filled'), hold off  
-else
 scatter(spk_x, spk_y, 30, dotcol, 'filled'), hold off
-end
 
 axis equal
  
