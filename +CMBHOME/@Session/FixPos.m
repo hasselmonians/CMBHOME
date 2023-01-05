@@ -1,4 +1,4 @@
-function self = FixPos(self, max_allowed_flips)
+function self = FixPos(self, max_allowed_flips, xlims, ylims)
 % Fixes large jumps in position and interpolates missing values
 %
 % Takes all 0,0s and large jumps in position (greater than
@@ -16,7 +16,20 @@ if self.raw_pos~=1
     return;
 end
     
-warning('off', 'MATLAB:interp1:NaNinY');
+    if ~exist('max_allowed_flips', 'var')
+        max_allowed_flips = 5; % samples
+    end
+
+    if ~exist("xlims",'var')
+        xlims = [50, inf];
+    end
+
+    if ~exist("ylims",'var')
+        ylims = [50, inf];
+    end
+
+
+    warning('off', 'MATLAB:interp1:NaNinY');
 
     jitter_threshold = 10/self.spatial_scale; % pixels in 10 cm; one-sample change in distance that qualifies as bad vector
     
@@ -25,14 +38,12 @@ warning('off', 'MATLAB:interp1:NaNinY');
     
     ts = self.b_ts;
     
-    bads = (x<=50| y<=50);
+    bads = (x<=xlims(1)) | (x>=xlims(2)) | (y<=ylims(1))| (y>=ylims(2));
     
     x(bads) = NaN;
     y(bads) = NaN;
       
-    if ~exist('max_allowed_flips', 'var')
-        max_allowed_flips = 5; % samples
-    end
+
     
     flips = findOnsetsAndOffsets(isnan(x));
     
@@ -64,8 +75,8 @@ warning('off', 'MATLAB:interp1:NaNinY');
     
     self.raw_pos = self.raw_pos-1;
     
-    x = x-nanmin(x);
-    y = y-nanmin(y);
+    %x = x-nanmin(x);
+    %y = y-nanmin(y);
     
     self.b_x = x;
     self.b_y = y;
